@@ -5,10 +5,10 @@ namespace Hyde\RealtimeCompiler\Routing;
 use Desilva\Microserve\Request;
 use Desilva\Microserve\Response;
 use Hyde\Framework\Hyde;
-use Hyde\Framework\Models\BladePage;
-use Hyde\Framework\Models\DocumentationPage;
-use Hyde\Framework\Models\MarkdownPage;
-use Hyde\Framework\Models\MarkdownPost;
+use Hyde\Framework\Models\Pages\BladePage;
+use Hyde\Framework\Models\Pages\DocumentationPage;
+use Hyde\Framework\Models\Pages\MarkdownPage;
+use Hyde\Framework\Models\Pages\MarkdownPost;
 use Hyde\RealtimeCompiler\Actions\Compiler;
 use Hyde\RealtimeCompiler\Concerns\InteractsWithLaravel;
 use Hyde\RealtimeCompiler\Concerns\SendsErrorResponses;
@@ -103,6 +103,6 @@ class PageRouter
 
     public static function handle(Request $request): Response
     {
-        return (new static($request))->handlePageRequest();
+        return (new self($request))->handlePageRequest();
     }
 }
