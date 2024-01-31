@@ -288,7 +288,7 @@
                             There are no media files yet. Why not add some?
                         </div>
                     @else
-                        <div class="container d-flex flex-wrap">
+                        <div class="container d-flex flex-wrap px-0">
                             @foreach(\Hyde\Support\Filesystem\MediaFile::all() as $mediaFile)
                                 <div class="col-lg-4 p-2 d-flex flex-grow-1">
                                     <figure class="card w-100 p-2 mb-0">
