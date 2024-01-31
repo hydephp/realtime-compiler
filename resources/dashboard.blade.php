@@ -310,7 +310,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div class="row flex-nowrap justify-content-start">
-                                                        <p class="col-auto text-truncate mb-0 pe-2">
+                                                        <p class="col-auto text-truncate mb-0 pe-2" style="max-width: 210px;">
                                                             <strong title="{{ $mediaFile->getPath() }}">{{ $mediaFile->getName() }}</strong>
                                                         </p>
                                                         <div class="col px-0 text-nowrap">
