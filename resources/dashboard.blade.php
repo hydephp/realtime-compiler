@@ -41,9 +41,9 @@
                 <a class="nav-link px-3" href="/dashboard">Open full page dashboard</a>
             </div>
         @else
-        <div class="nav-item text-nowrap">
-            <a class="nav-link px-3" href="/">Back to site</a>
-        </div>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="/">Back to site</a>
+            </div>
         @endif
     </div>
 </nav>
