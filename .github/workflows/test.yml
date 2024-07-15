@@ -17,11 +17,7 @@ jobs:
         run: composer install
 
       - name: Set up test runner
-        run: |
-          php -r '
-            require_once __DIR__."/vendor/autoload.php";
-            \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();
-          '
+        run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
 
       - name: Run tests
         run: vendor/bin/phpunit
