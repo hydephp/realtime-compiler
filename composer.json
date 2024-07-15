@@ -27,13 +27,5 @@
     },
     "suggest": {
         "hyde/framework": "This package requires Hyde Framework version v1.0.0 or higher."
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
-    "require-dev": {
-        "pestphp/pest": "^2.34"
     }
 }
