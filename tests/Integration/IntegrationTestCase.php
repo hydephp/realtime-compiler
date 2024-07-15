@@ -181,7 +181,7 @@ abstract class IntegrationTestCase extends TestCase
         $workDir = getcwd();
 
         // Junction the package source of hyde/realtime-compiler to the test runner
-        $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
+        $branch = getenv('HYDE_RC_BRANCH') ?: trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
         echo "\33[33mInstalling hyde/realtime-compiler:dev-$branch...\33[0m\n";
         chdir($runner);
         exec('composer config repositories.realtime-compiler path '.realpath(__DIR__.'/../../'), $output, $return);
