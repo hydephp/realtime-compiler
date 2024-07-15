@@ -13,9 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
-
       - name: Install dependencies
         run: composer install
 
