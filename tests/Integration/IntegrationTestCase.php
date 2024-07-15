@@ -39,7 +39,13 @@ abstract class IntegrationTestCase extends TestCase
             }
 
             fclose($process);
-            throw new RuntimeException(sprintf('Port 8080 is already in use. (PID %s)', $pid));
+            $throwInsteadOfKill = false;
+            if ($throwInsteadOfKill) {
+                throw new RuntimeException(sprintf('Port 8080 is already in use. (PID %s)', $pid));
+            } else {
+                // Kill the process using the port
+                shell_exec(PHP_OS_FAMILY === 'Windows' ? "taskkill /F /PID $pid" : "kill -9 $pid");
+            }
         }
 
         // Start the server in a background process, keeping the task ID for later
