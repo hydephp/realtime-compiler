@@ -134,12 +134,14 @@ abstract class IntegrationTestCase extends TestCase
             rmdir($target);
         }
 
+        echo "\33[33mDownloading test runner scaffolding...\33[0m\n";
         $raw = file_get_contents($archive);
 
         if ($raw === false) {
             throw new RuntimeException('Failed to download test runner.');
         }
 
+        echo "\33[33mExtracting archive...\33[0m\n";
         $zipPath = tempnam(sys_get_temp_dir(), 'hyde-master');
 
         if ($zipPath === false) {
@@ -181,6 +183,7 @@ abstract class IntegrationTestCase extends TestCase
 
         // Junction the package source of hyde/realtime-compiler to the test runner
         $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
+        echo "\33[33mInstalling hyde/realtime-compiler:dev-$branch...\33[0m\n";
         chdir($runner);
         shell_exec('composer config repositories.realtime-compiler path '.realpath(__DIR__.'/../../'));
         shell_exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress");
