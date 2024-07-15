@@ -115,7 +115,7 @@ abstract class IntegrationTestCase extends TestCase
         // Junction the package source of hyde/realtime-compiler to the test runner
         $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
         shell_exec("cd $runner && composer config repositories.realtime-compiler path ../../");
-        shell_exec("cd $runner && composer require --dev hyde/realtime-compiler:dev-$branch");
+        shell_exec("cd $runner && composer require --dev hyde/realtime-compiler:dev-$branch --no-progress");
     }
 
     public function get(string $uri): TestResponse
