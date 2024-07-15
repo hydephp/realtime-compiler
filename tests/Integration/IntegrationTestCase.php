@@ -28,8 +28,18 @@ abstract class IntegrationTestCase extends TestCase
         $process = @fsockopen('localhost', 8080, $errno, $errstr, 1);
 
         if ($process) {
+            // Try to find the PID of the process using the port
+            if (PHP_OS_FAMILY === 'Windows') {
+                $raw = shell_exec("netstat -aon | findstr :8080");
+                // get the PID of the process (last column of the first line)
+                preg_match('/\s+(\d+)$/', explode("\n", $raw)[0], $matches);
+                $pid = trim($matches[1]);
+            } else {
+                $pid = shell_exec("lsof -t -i:8080");
+            }
+
             fclose($process);
-            throw new RuntimeException('Port 8080 is already in use.');
+            throw new RuntimeException(sprintf("Port 8080 is already in use. (PID %s)", $pid));
         }
 
         // Start the server in a background process, keeping the task ID for later
