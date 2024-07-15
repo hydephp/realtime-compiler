@@ -4,7 +4,6 @@ namespace Hyde\RealtimeCompiler\Tests\Integration;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use function Termwind\render;
 
 class IntegrationTest extends TestCase
 {
@@ -33,6 +32,6 @@ class IntegrationTest extends TestCase
 
     private static function setUpTestRunner(): void
     {
-        render('<div class="text-green">Setting up test runner... This may take a while.</div>');
+        echo 'Setting up test runner... This may take a few seconds.'.PHP_EOL;
     }
 }
