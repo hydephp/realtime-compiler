@@ -23,4 +23,11 @@ class TestResponse
         $this->test = $test;
         $this->response = $response;
     }
+
+    public function assertStatus(int $code): static
+    {
+        $this->test->assertSame($code, $this->response->getStatusCode());
+
+        return $this;
+    }
 }
