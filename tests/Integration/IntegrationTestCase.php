@@ -119,6 +119,6 @@ abstract class IntegrationTestCase extends TestCase
 
     public function get(string $uri): TestResponse
     {
-        return TestResponse::get($uri);
+        return TestResponse::get($this, $uri);
     }
 }
