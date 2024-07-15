@@ -2,19 +2,22 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
+use GuzzleHttp\Client;
+use Psr\Http\Message\ResponseInterface;
+
 class TestResponse
 {
-    protected \Psr\Http\Message\ResponseInterface $response;
+    protected ResponseInterface $response;
 
     public static function get(string $uri): static
     {
-        $guzzle = new \GuzzleHttp\Client();
+        $guzzle = new Client();
         $response = $guzzle->get('http://localhost:8080'.$uri);
 
         return new static($response);
     }
 
-    public function __construct(\Psr\Http\Message\ResponseInterface $response)
+    public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
     }
