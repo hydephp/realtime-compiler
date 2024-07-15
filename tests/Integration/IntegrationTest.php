@@ -28,9 +28,9 @@ class IntegrationTest extends TestCase
         self::$server = proc_open('cd '.realpath(__DIR__.'/../runner').' && php hyde serve', [], $pipes);
     }
 
-    public static function tearDownAfterClass(): void
+    public function __destruct()
     {
-        // Stop the server
+        // Ensure the server is stopped, regardless of any errors
         proc_terminate(self::$server);
     }
 
