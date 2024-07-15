@@ -51,6 +51,11 @@ abstract class IntegrationTestCase extends TestCase
         // Start the server in a background process, keeping the task ID for later
         $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
         self::$server = proc_open("php hyde serve > $null", [], $pipes, realpath(__DIR__.'/../runner'));
+
+        // Assert that the server was started successfully
+        if (! self::$server) {
+            throw new RuntimeException('Failed to start the test server.');
+        }
     }
 
     public function __destruct()
