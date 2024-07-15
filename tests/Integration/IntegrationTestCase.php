@@ -116,4 +116,9 @@ abstract class IntegrationTestCase extends TestCase
         shell_exec("cd $runner && composer config repositories.realtime-compiler path ../../");
         shell_exec("cd $runner && composer require --dev hyde/realtime-compiler:dev-$branch");
     }
+
+    public function get(string $uri): TestResponse
+    {
+        return TestResponse::get($uri);
+    }
 }
