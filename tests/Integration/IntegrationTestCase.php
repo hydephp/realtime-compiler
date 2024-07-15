@@ -2,6 +2,7 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use ZipArchive;
@@ -10,16 +11,13 @@ abstract class IntegrationTestCase extends TestCase
 {
     /** @var resource */
     protected static $server;
-    protected static bool $monorepo = false;
 
     public static function setUpBeforeClass(): void
     {
         $monorepo = realpath(__DIR__.'/../../../../');
 
         if ($monorepo && realpath(getcwd()) === $monorepo && file_exists($monorepo.'/hyde')) {
-            self::$monorepo = true;
-
-            return;
+            throw new InvalidArgumentException('This test suite is not intended to be run from the monorepo.');
         }
 
         if (! self::hasTestRunnerSetUp()) {
@@ -64,13 +62,6 @@ abstract class IntegrationTestCase extends TestCase
         // Assert that the server was started successfully
         if (! self::$server) {
             throw new RuntimeException('Failed to start the test server.');
-        }
-    }
-
-    protected function setUp(): void
-    {
-        if (self::$monorepo) {
-            $this->markTestSkipped('This test suite is not intended to be run from the monorepo.');
         }
     }
 
