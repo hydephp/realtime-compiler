@@ -6,6 +6,7 @@ class IntegrationTest extends IntegrationTestCase
 {
     public function testExample()
     {
-        $this->get('/')->assertStatus(200);
+        $this->get('/')
+            ->assertStatus(200);
     }
 }
