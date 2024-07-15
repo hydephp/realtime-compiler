@@ -92,7 +92,7 @@ abstract class IntegrationTestCase extends TestCase
 
     protected static function hasTestRunnerSetUp(): bool
     {
-        return file_exists(self::getRunnerPath());
+        return file_exists(self::getRunnerPath() && file_exists(self::getRunnerPath().'/vendor/autoload.php'));
     }
 
     public static function setUpTestRunner(): void
