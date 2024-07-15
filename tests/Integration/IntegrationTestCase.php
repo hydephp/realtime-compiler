@@ -2,15 +2,13 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
+use ZipArchive;
+use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
-use ZipArchive;
 
 abstract class IntegrationTestCase extends TestCase
 {
-    protected const RUNNER_PATH = __DIR__.'/../runner';
-
     /** @var resource */
     protected static $server;
 
@@ -52,7 +50,7 @@ abstract class IntegrationTestCase extends TestCase
 
         // Start the server in a background process, keeping the task ID for later
         $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
-        self::$server = proc_open("php hyde serve > $null", [], $pipes, realpath(self::RUNNER_PATH));
+        self::$server = proc_open("php hyde serve > $null", [], $pipes, realpath(self::getRunnerPath()));
 
         // Wait for the server to start
         while (@fsockopen('localhost', 8080, $errno, $errstr, 1) === false) {
@@ -67,6 +65,11 @@ abstract class IntegrationTestCase extends TestCase
         }
     }
 
+    protected static function getRunnerPath(): string
+    {
+        return __DIR__.'/../runner';
+    }
+
     public function __destruct()
     {
         // Ensure the server is stopped, regardless of any errors
@@ -77,7 +80,7 @@ abstract class IntegrationTestCase extends TestCase
 
     protected static function hasTestRunnerSetUp(): bool
     {
-        return file_exists(self::RUNNER_PATH);
+        return file_exists(self::getRunnerPath());
     }
 
     public static function setUpTestRunner(): void
@@ -85,7 +88,7 @@ abstract class IntegrationTestCase extends TestCase
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
-        $target = self::RUNNER_PATH;
+        $target = self::getRunnerPath();
 
         $raw = file_get_contents($archive);
 
@@ -134,7 +137,7 @@ abstract class IntegrationTestCase extends TestCase
 
     public function projectPath(string $path = ''): string
     {
-        return realpath(self::RUNNER_PATH).($path ? '/'.$path : '');
+        return realpath(self::getRunnerPath()).($path ? '/'.$path : '');
     }
 
     public function get(string $uri): TestResponse
