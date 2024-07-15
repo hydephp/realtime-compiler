@@ -27,11 +27,13 @@ class IntegrationTest extends TestCase
 
     private static function hasTestRunnerSetUp(): bool
     {
-        return false;
+        return file_exists(__DIR__.'/../runner');
     }
 
     private static function setUpTestRunner(): void
     {
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
+
+        shell_exec('cd '.__DIR__.'/../ && git clone https://github.com/hydephp/hyde.git runner');
     }
 }
