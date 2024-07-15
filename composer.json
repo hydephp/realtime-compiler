@@ -8,6 +8,11 @@
             "Hyde\\RealtimeCompiler\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Hyde\\RealtimeCompiler\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Caen De Silva",
