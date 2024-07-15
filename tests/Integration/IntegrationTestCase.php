@@ -52,6 +52,13 @@ abstract class IntegrationTestCase extends TestCase
         $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
         self::$server = proc_open("php hyde serve > $null", [], $pipes, realpath(__DIR__.'/../runner'));
 
+        // Wait for the server to start
+        while (@fsockopen('localhost', 8080, $errno, $errstr, 1) === false) {
+            if (proc_get_status(self::$server)['running'] === false) {
+                break;
+            }
+        }
+
         // Assert that the server was started successfully
         if (! self::$server) {
             throw new RuntimeException('Failed to start the test server.');
