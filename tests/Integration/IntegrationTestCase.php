@@ -54,6 +54,7 @@ abstract class IntegrationTestCase extends TestCase
 
         // Wait for the server to start
         while (@fsockopen('localhost', 8080, $errno, $errstr, 1) === false) {
+            dump(proc_get_status(self::$server));
             if (proc_get_status(self::$server)['running'] === false) {
                 break;
             }
