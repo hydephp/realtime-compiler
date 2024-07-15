@@ -16,6 +16,7 @@ class TestResponse
     public static function get(IntegrationTestCase $test, string $uri): static
     {
         $guzzle = new Client();
+
         $response = $guzzle->get('http://localhost:8080'.$uri, ['http_errors' => false]);
 
         return new static($test, $response);
