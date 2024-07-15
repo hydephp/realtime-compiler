@@ -48,14 +48,8 @@ abstract class IntegrationTestCase extends TestCase
             }
         }
 
-        if (PHP_OS_FAMILY === 'Windows') {
-            $command = 'set HYDE_SERVER_REQUEST_OUTPUT=0 && php hyde serve';
-        } else {
-            $command = 'export HYDE_SERVER_REQUEST_OUTPUT=0 && php hyde serve';
-        }
-
         // Start the server in a background process, keeping the task ID for later
-        self::$server = proc_open($command, [], $pipes, realpath(__DIR__.'/../runner'));
+        self::$server = proc_open('php hyde serve', [], $pipes, realpath(__DIR__.'/../runner'));
     }
 
     public function __destruct()
