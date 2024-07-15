@@ -20,7 +20,7 @@ jobs:
         run: composer install
 
       - name: Configure environment
-        run: echo "HYDE_RC_RUNNER_PATH=../hyde-rc-runner" >> $GITHUB_ENV
+        run: echo "HYDE_RC_RUNNER_PATH=../../hyde-rc-runner" >> $GITHUB_ENV
 
       - name: Set up test runner
         run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
