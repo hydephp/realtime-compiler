@@ -130,6 +130,7 @@ abstract class IntegrationTestCase extends TestCase
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
         $target = (self::getRunnerPath());
         if (file_exists($target)) {
+            dump($target);
             rmdir($target);
         }
 
