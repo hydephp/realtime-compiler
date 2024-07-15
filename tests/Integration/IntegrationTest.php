@@ -2,6 +2,7 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
+use ZipArchive;
 use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -52,7 +53,7 @@ class IntegrationTest extends TestCase
 
         file_put_contents($zipPath, $raw);
 
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
 
         if ($zip->open($zipPath) !== true) {
             throw new RuntimeException('Failed to open zip archive.');
