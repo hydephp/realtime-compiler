@@ -59,12 +59,23 @@ class IntegrationTest extends TestCase
             throw new RuntimeException('Failed to open zip archive.');
         }
 
-        $zip->extractTo($target);
+        // Get the name of the root directory in the zip file
+        $rootDir = $zip->getNameIndex(0);
+
+        // Extract to a temporary directory
+        $tempExtractPath = $target . '_temp';
+        $zip->extractTo($tempExtractPath);
 
         $zip->close();
 
+        // Move the contents of the extracted directory to the target directory
+        rename($tempExtractPath . '/' . $rootDir, $target);
+
+        // Remove the temporary extraction directory
+        rmdir($tempExtractPath);
+
         unlink($zipPath);
 
-        $runner = realpath($target.'/hyde-master/runner');
+        $runner = realpath($target);
     }
 }
