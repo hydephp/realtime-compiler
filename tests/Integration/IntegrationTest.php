@@ -15,6 +15,7 @@ class IntegrationTest extends IntegrationTestCase
     {
         $this->get('/non-existent-page')
             ->assertStatus(404)
+            ->assertSeeText('RouteNotFoundException')
             ->assertSeeText('Route [non-existent-page] not found.');
     }
 }
