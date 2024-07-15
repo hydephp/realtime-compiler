@@ -16,5 +16,12 @@ jobs:
       - name: Install dependencies
         run: composer install
 
+      - name: Set up test runner
+        run: |
+          php -r '
+            require_once __DIR__."/tests/Integration/IntegrationTestCase.php";
+            IntegrationTestCase::setUpTestRunner();
+          '
+
       - name: Run tests
         run: vendor/bin/phpunit

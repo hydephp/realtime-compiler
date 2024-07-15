@@ -78,7 +78,7 @@ abstract class IntegrationTestCase extends TestCase
         return file_exists(__DIR__.'/../runner');
     }
 
-    protected static function setUpTestRunner(): void
+    public static function setUpTestRunner(): void
     {
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
