@@ -44,12 +44,12 @@ abstract class IntegrationTestCase extends TestCase
         }
     }
 
-    private static function hasTestRunnerSetUp(): bool
+    protected static function hasTestRunnerSetUp(): bool
     {
         return file_exists(__DIR__.'/../runner');
     }
 
-    private static function setUpTestRunner(): void
+    protected static function setUpTestRunner(): void
     {
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
