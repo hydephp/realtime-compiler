@@ -185,8 +185,14 @@ abstract class IntegrationTestCase extends TestCase
         $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
         echo "\33[33mInstalling hyde/realtime-compiler:dev-$branch...\33[0m\n";
         chdir($runner);
-        shell_exec('composer config repositories.realtime-compiler path '.realpath(__DIR__.'/../../'));
-        shell_exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress");
+        exec('composer config repositories.realtime-compiler path '.realpath(__DIR__.'/../../'), $output, $return);
+        if ($return !== 0) {
+            throw new RuntimeException('Failed to add repository path.');
+        }
+        exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress", $output, $return);
+        if ($return !== 0) {
+            throw new RuntimeException('Failed to install hyde/realtime-compiler.');
+        }
         chdir($workDir);
     }
 
