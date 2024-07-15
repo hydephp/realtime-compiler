@@ -49,7 +49,9 @@ abstract class IntegrationTestCase extends TestCase
         }
 
         // Start the server in a background process, keeping the task ID for later
-        self::$server = proc_open('php hyde serve', [], $pipes, realpath(__DIR__.'/../runner'));
+        $env = $_ENV;
+        $env['HYDE_SERVER_REQUEST_OUTPUT'] = 0;
+        self::$server = proc_open('export HYDE_SERVER_REQUEST_OUTPUT=0 && php hyde serve', [], $pipes, realpath(__DIR__.'/../runner'), $env);
     }
 
     public function __destruct()
