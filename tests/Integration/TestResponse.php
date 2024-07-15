@@ -13,7 +13,10 @@ class TestResponse
     public static function get(IntegrationTestCase $test, string $uri): static
     {
         $guzzle = new Client();
+
+        ob_start();
         $response = $guzzle->get('http://localhost:8080'.$uri);
+        ob_end_clean();
 
         return new static($test, $response);
     }
