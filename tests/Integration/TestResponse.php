@@ -92,7 +92,8 @@ class TestResponse
 
     public function assertJson(array $data): static
     {
-        $this->test->assertJsonStringEqualsJsonString(json_encode($data), $this->html);
+        $this->test->assertJson($this->html);
+        $this->test->assertSame($data, json_decode($this->html, true));
 
         return $this;
     }
