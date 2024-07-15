@@ -120,7 +120,7 @@ abstract class IntegrationTestCase extends TestCase
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
-        $target = (self::getRunnerPath());
+        $target = self::getRunnerPath();
         if (file_exists($target)) {
             rmdir($target);
         }
