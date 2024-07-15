@@ -19,11 +19,11 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Set up test runner
-        run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
-
       - name: Configure environment
         run: echo "HYDE_RC_RUNNER_PATH=../hyde-rc-runner" >> $GITHUB_ENV
+
+      - name: Set up test runner
+        run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
 
       - name: Run tests with PHPUnit
         run: vendor/bin/phpunit --colors=always
