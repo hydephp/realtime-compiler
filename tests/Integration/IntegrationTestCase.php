@@ -83,7 +83,7 @@ abstract class IntegrationTestCase extends TestCase
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
-        $target = __DIR__.'/../runner';
+        $target = static::projectPath();
 
         $raw = file_get_contents($archive);
 
