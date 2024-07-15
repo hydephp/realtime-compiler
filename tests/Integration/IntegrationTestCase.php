@@ -182,7 +182,7 @@ abstract class IntegrationTestCase extends TestCase
         $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
         chdir($runner);
         shell_exec('composer config repositories.realtime-compiler path '.realpath(__DIR__.'/../../'));
-        shell_exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress > setup.log 2>&1");
+        shell_exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress");
         chdir($workDir);
     }
 
