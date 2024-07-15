@@ -2,10 +2,10 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
-use ZipArchive;
-use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use ZipArchive;
 
 class IntegrationTest extends TestCase
 {
@@ -63,13 +63,13 @@ class IntegrationTest extends TestCase
         $rootDir = $zip->getNameIndex(0);
 
         // Extract to a temporary directory
-        $tempExtractPath = $target . '_temp';
+        $tempExtractPath = $target.'_temp';
         $zip->extractTo($tempExtractPath);
 
         $zip->close();
 
         // Move the contents of the extracted directory to the target directory
-        rename($tempExtractPath . '/' . $rootDir, $target);
+        rename($tempExtractPath.'/'.$rootDir, $target);
 
         // Remove the temporary extraction directory
         rmdir($tempExtractPath);
