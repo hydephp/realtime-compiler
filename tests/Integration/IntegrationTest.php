@@ -9,6 +9,9 @@ use ZipArchive;
 
 class IntegrationTest extends TestCase
 {
+    /** @var resource */
+    protected static $server;
+
     public static function setUpBeforeClass(): void
     {
         $monorepo = realpath(__DIR__.'/../../../../');
@@ -20,6 +23,15 @@ class IntegrationTest extends TestCase
         if (! self::hasTestRunnerSetUp()) {
             self::setUpTestRunner();
         }
+
+        // Start the server in a background process, keeping the task ID for later
+        self::$server = proc_open('cd '.realpath(__DIR__.'/../runner').' && php hyde serve', [], $pipes);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        // Stop the server
+        proc_terminate(self::$server);
     }
 
     public function testExample()
