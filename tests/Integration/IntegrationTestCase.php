@@ -57,6 +57,9 @@ abstract class IntegrationTestCase extends TestCase
             if (proc_get_status(self::$server)['running'] === false) {
                 break;
             }
+
+            // Sleep 20ms
+            usleep(20000);
         }
 
         // Assert that the server was started successfully
