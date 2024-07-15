@@ -20,7 +20,7 @@ jobs:
         run: |
           php -r '
             require_once __DIR__."/vendor/autoload.php";
-            IntegrationTestCase::setUpTestRunner();
+            \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();
           '
 
       - name: Run tests
