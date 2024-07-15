@@ -2,10 +2,10 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
-use ZipArchive;
-use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use ZipArchive;
 
 abstract class IntegrationTestCase extends TestCase
 {
@@ -30,16 +30,16 @@ abstract class IntegrationTestCase extends TestCase
         if ($process) {
             // Try to find the PID of the process using the port
             if (PHP_OS_FAMILY === 'Windows') {
-                $raw = shell_exec("netstat -aon | findstr :8080");
-                // get the PID of the process (last column of the first line)
+                $raw = shell_exec('netstat -aon | findstr :8080');
+                // Get the PID of the process (last column of the first line)
                 preg_match('/\s+(\d+)$/', explode("\n", $raw)[0], $matches);
                 $pid = trim($matches[1]);
             } else {
-                $pid = shell_exec("lsof -t -i:8080");
+                $pid = shell_exec('lsof -t -i:8080');
             }
 
             fclose($process);
-            throw new RuntimeException(sprintf("Port 8080 is already in use. (PID %s)", $pid));
+            throw new RuntimeException(sprintf('Port 8080 is already in use. (PID %s)', $pid));
         }
 
         // Start the server in a background process, keeping the task ID for later
