@@ -31,7 +31,9 @@ class IntegrationTest extends TestCase
     public function __destruct()
     {
         // Ensure the server is stopped, regardless of any errors
-        proc_terminate(self::$server);
+        if (self::$server) {
+            proc_terminate(self::$server);
+        }
     }
 
     public function testExample()
