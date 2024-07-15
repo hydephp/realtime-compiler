@@ -2,6 +2,7 @@
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
+use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -34,6 +35,35 @@ class IntegrationTest extends TestCase
     {
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
-        shell_exec('cd '.__DIR__.'/../ && git clone https://github.com/hydephp/hyde.git runner');
+        $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
+        $target = __DIR__.'/../runner';
+
+        $raw = file_get_contents($archive);
+
+        if ($raw === false) {
+            throw new RuntimeException('Failed to download test runner.');
+        }
+
+        $zipPath = tempnam(sys_get_temp_dir(), 'hyde-master');
+
+        if ($zipPath === false) {
+            throw new RuntimeException('Failed to create temporary file.');
+        }
+
+        file_put_contents($zipPath, $raw);
+
+        $zip = new \ZipArchive();
+
+        if ($zip->open($zipPath) !== true) {
+            throw new RuntimeException('Failed to open zip archive.');
+        }
+
+        $zip->extractTo($target);
+
+        $zip->close();
+
+        unlink($zipPath);
+
+        $runner = realpath($target.'/hyde-master/runner');
     }
 }
