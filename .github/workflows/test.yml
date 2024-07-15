@@ -22,7 +22,7 @@ jobs:
       - name: Configure environment
         run: |
           echo "HYDE_RC_RUNNER_PATH=/tmp/hyde-rc-runner" >> $GITHUB_ENV
-          echo "HYDE_RC_BRANCH={{ github.sha }}" >> $GITHUB_ENV
+          echo "HYDE_RC_BRANCH=${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Set up test runner
         run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
