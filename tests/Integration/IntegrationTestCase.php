@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
 use ZipArchive;
@@ -79,7 +81,24 @@ abstract class IntegrationTestCase extends TestCase
 
     protected static function getRunnerPath(): string
     {
-        return __DIR__.'/../runner';
+        // Get path from the environment variable
+        $path = getenv('HYDE_RC_RUNNER_PATH');
+
+        if ($path === false) {
+            throw new RuntimeException('HYDE_RC_RUNNER_PATH environment variable is not set.');
+        }
+
+        // Check that it's not a child of the project root
+        $packageDir = realpath(__DIR__.'/../../');
+        if (str_starts_with($path, $packageDir)) {
+            throw new RuntimeException('HYDE_RC_RUNNER_PATH cannot be a child of the package root as junctioning will massivly inflate vendor directory.');
+        }
+
+        if (file_exists($path)) {
+            $path = realpath($path);
+        }
+
+        return $path;
     }
 
     public function __destruct()
@@ -99,8 +118,20 @@ abstract class IntegrationTestCase extends TestCase
     {
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
 
+        // Turn php warnings into exceptions
+        set_error_handler(function ($severity, $message, $file, $line) {
+            if (!(error_reporting() & $severity)) {
+                return;
+            }
+
+            throw new RuntimeException($message);
+        });
+
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
-        $target = self::getRunnerPath();
+        $target = (self::getRunnerPath());
+        if(file_exists($target)) {
+            rmdir($target);
+        }
 
         $raw = file_get_contents($archive);
 
@@ -141,10 +172,18 @@ abstract class IntegrationTestCase extends TestCase
 
         $runner = realpath($target);
 
+        if ($runner === false) {
+            throw new RuntimeException('Failed to get the real path of the test runner.');
+        }
+
+        $workDir = getcwd();
+
         // Junction the package source of hyde/realtime-compiler to the test runner
         $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
-        shell_exec("cd $runner && composer config repositories.realtime-compiler path ../../");
-        shell_exec("cd $runner && composer require --dev hyde/realtime-compiler:dev-$branch --no-progress > setup.log 2>&1");
+        chdir($runner);
+        shell_exec("composer config repositories.realtime-compiler path " . realpath(__DIR__.'/../../'));
+        shell_exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress > setup.log 2>&1");
+        chdir($workDir);
     }
 
     public function projectPath(string $path = ''): string

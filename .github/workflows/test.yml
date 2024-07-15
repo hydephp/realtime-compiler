@@ -24,3 +24,5 @@ jobs:
 
       - name: Run tests with PHPUnit
         run: vendor/bin/phpunit --colors=always
+        env:
+          HYDE_RC_RUNNER_PATH: ../hyde-rc-runner
