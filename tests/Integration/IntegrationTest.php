@@ -24,6 +24,14 @@ class IntegrationTest extends TestCase
             self::setUpTestRunner();
         }
 
+        // Check that post 8080 is available
+        $process = @fsockopen('localhost', 8080, $errno, $errstr, 1);
+
+        if ($process) {
+            fclose($process);
+            throw new RuntimeException('Port 8080 is already in use.');
+        }
+
         // Start the server in a background process, keeping the task ID for later
         self::$server = proc_open('cd '.realpath(__DIR__.'/../runner').' && php hyde serve', [], $pipes);
     }
