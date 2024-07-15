@@ -32,6 +32,6 @@ class IntegrationTest extends TestCase
 
     private static function setUpTestRunner(): void
     {
-        // Set up the test runner
+        echo 'Setting up test runner... This may take a few seconds.'.PHP_EOL;
     }
 }
