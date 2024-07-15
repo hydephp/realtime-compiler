@@ -53,7 +53,13 @@ abstract class IntegrationTestCase extends TestCase
         self::$server = proc_open("php hyde serve > $null", [], $pipes, realpath(self::getRunnerPath()));
 
         // Wait for the server to start
+        $waitTime = time();
         while (@fsockopen('localhost', 8080, $errno, $errstr, 1) === false) {
+            // Timeout after 5 seconds
+            if (time() - $waitTime > 5) {
+                throw new RuntimeException('Failed to start the test server.');
+            }
+
             if (proc_get_status(self::$server)['running'] === false) {
                 // Make a head request to the server to see if it's running
                 if (shell_exec('curl -I http://localhost:8080') === false) {
