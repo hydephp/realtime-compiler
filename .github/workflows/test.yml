@@ -19,7 +19,7 @@ jobs:
       - name: Set up test runner
         run: |
           php -r '
-            require_once __DIR__."/tests/Integration/IntegrationTestCase.php";
+            require_once __DIR__."/vendor/autoload.php";
             IntegrationTestCase::setUpTestRunner();
           '
 
