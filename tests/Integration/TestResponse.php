@@ -10,6 +10,9 @@ class TestResponse
     protected ResponseInterface $response;
     protected IntegrationTestCase $test;
 
+    protected string $html;
+    protected string $text;
+
     public static function get(IntegrationTestCase $test, string $uri): static
     {
         $guzzle = new Client();
@@ -22,6 +25,41 @@ class TestResponse
     {
         $this->test = $test;
         $this->response = $response;
+
+        $this->parsePageData();
+    }
+
+    protected function parsePageData(): void
+    {
+        $this->html = $this->response->getBody()->getContents();
+        $this->text = $this->extractText($this->html);
+    }
+
+    protected function extractText(string $html): string
+    {
+        // Strip script and style tags
+        $html = preg_replace('/<style\b[^>]*>(.*?)<\/style>/is', '', $html);
+        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+
+        $html = strip_tags($html);
+
+        $html = implode("\n", array_map('trim', explode("\n", $html)));
+
+        // Remove double spaces and double newlines
+        $html = preg_replace('/\n{2,}/', "\n", $html);
+        $html = preg_replace('/\s{2,}/', ' ', $html);
+
+        return trim($html);
+    }
+
+    public function dd(): void
+    {
+        dd($this->html);
+    }
+
+    public function ddText(): void
+    {
+        dd($this->text);
     }
 
     public function assertStatus(int $code): static
