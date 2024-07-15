@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Hyde\RealtimeCompiler\Tests\Integration;
 
-use ZipArchive;
-use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use ZipArchive;
 
 abstract class IntegrationTestCase extends TestCase
 {
@@ -120,7 +120,7 @@ abstract class IntegrationTestCase extends TestCase
 
         // Turn php warnings into exceptions
         set_error_handler(function ($severity, $message, $file, $line) {
-            if (!(error_reporting() & $severity)) {
+            if (! (error_reporting() & $severity)) {
                 return;
             }
 
@@ -129,7 +129,7 @@ abstract class IntegrationTestCase extends TestCase
 
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
         $target = (self::getRunnerPath());
-        if(file_exists($target)) {
+        if (file_exists($target)) {
             rmdir($target);
         }
 
@@ -181,7 +181,7 @@ abstract class IntegrationTestCase extends TestCase
         // Junction the package source of hyde/realtime-compiler to the test runner
         $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD') ?: 'master');
         chdir($runner);
-        shell_exec("composer config repositories.realtime-compiler path " . realpath(__DIR__.'/../../'));
+        shell_exec('composer config repositories.realtime-compiler path '.realpath(__DIR__.'/../../'));
         shell_exec("composer require --dev hyde/realtime-compiler:dev-$branch --no-progress > setup.log 2>&1");
         chdir($workDir);
     }
