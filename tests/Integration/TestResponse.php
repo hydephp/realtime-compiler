@@ -68,4 +68,11 @@ class TestResponse
 
         return $this;
     }
+
+    public function assertSeeText(string $text): static
+    {
+        $this->test->assertStringContainsString($text, $this->text);
+
+        return $this;
+    }
 }

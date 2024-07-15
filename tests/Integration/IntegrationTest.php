@@ -7,6 +7,7 @@ class IntegrationTest extends IntegrationTestCase
     public function testExample()
     {
         $this->get('/')
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertSeeText("You're running on HydePHP");
     }
 }
