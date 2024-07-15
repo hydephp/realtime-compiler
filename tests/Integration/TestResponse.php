@@ -89,4 +89,11 @@ class TestResponse
 
         return $this;
     }
+
+    public function assertJson(array $data): static
+    {
+        $this->test->assertJsonStringEqualsJsonString(json_encode($data), $this->html);
+
+        return $this;
+    }
 }
