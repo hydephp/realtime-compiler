@@ -41,8 +41,9 @@ abstract class IntegrationTestCase extends TestCase
             }
 
             fclose($process);
-            $throwInsteadOfKill = false;
-            if ($throwInsteadOfKill) {
+
+            $throwOnBusyPort = false;
+            if ($throwOnBusyPort) {
                 throw new RuntimeException(sprintf('Port 8080 is already in use. (PID %s)', $pid));
             } else {
                 // Kill the process using the port
@@ -117,15 +118,6 @@ abstract class IntegrationTestCase extends TestCase
     public static function setUpTestRunner(): void
     {
         echo "\33[33mSetting up test runner...\33[0m This may take a while.\n";
-
-        // Turn php warnings into exceptions
-        set_error_handler(function ($severity, $message, $file, $line) {
-            if (! (error_reporting() & $severity)) {
-                return;
-            }
-
-            throw new RuntimeException($message);
-        });
 
         $archive = 'https://github.com/hydephp/hyde/archive/refs/heads/master.zip';
         $target = (self::getRunnerPath());
