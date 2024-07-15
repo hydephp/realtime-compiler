@@ -20,4 +20,4 @@ jobs:
         run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
 
       - name: Run tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/phpunit --colors=always
