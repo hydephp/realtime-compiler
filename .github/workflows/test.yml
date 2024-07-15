@@ -19,5 +19,5 @@ jobs:
       - name: Set up test runner
         run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
 
-      - name: Run tests
+      - name: Run tests with PHPUnit
         run: vendor/bin/phpunit --colors=always
