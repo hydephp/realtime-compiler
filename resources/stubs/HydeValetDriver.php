@@ -5,6 +5,10 @@ namespace Valet\Drivers\Custom;
 use Composer\InstalledVersions;
 use Valet\Drivers\BasicValetDriver;
 
+/**
+ * @experimental This driver is experimental and may be unstable. Report issues at GitHub!
+ * @see https://github.com/hydephp/realtime-compiler/pull/30
+ */
 class HydeValetDriver extends BasicValetDriver
 {
     /**
@@ -16,15 +20,20 @@ class HydeValetDriver extends BasicValetDriver
     }
 
     /**
+     * Take any steps necessary before loading the front controller for this driver.
+     */
+    public function beforeLoading(string $sitePath, string $siteName, string $uri): void
+    {
+        // Set the correct autoloader path for the realtime compiler
+        putenv('HYDE_AUTOLOAD_PATH='.$sitePath.'/vendor/autoload.php');
+    }
+
+    /**
      * Determine if the incoming request is for a static file.
      */
     public function isStaticFile(string $sitePath, string $siteName, string $uri)/*: string|false */
     {
-        if (file_exists($staticFilePath = $sitePath.'/_site'.$uri)) {
-            return $staticFilePath;
-        }
-
-        return false;
+        return false; // Handled by the realtime compiler
     }
 
     /**
