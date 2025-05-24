@@ -16,16 +16,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: mbstring, xml, ctype, json, fileinfo, tokenizer
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
       - name: Install dependencies
-        run: composer install
+        run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Configure environment
         run: |
           echo "HYDE_RC_RUNNER_PATH=/tmp/hyde-rc-runner" >> $GITHUB_ENV
-          if [ ${{ github.event_name }} == 'push' ]; then
+          if [ "${{ github.event_name }}" == 'push' ]; then
             echo "HYDE_RC_RUNNER_BRANCH=master" >> $GITHUB_ENV
           else
-            echo "HYDE_RC_BRANCH=$GITHUB_SHA" >> $GITHUB_ENV
+            echo "HYDE_RC_BRANCH=${{ github.sha }}" >> $GITHUB_ENV
           fi
 
       - name: Set up test runner
@@ -33,7 +48,7 @@ jobs:
           echo -e "\033[33mSetting up test runner...\033[0m This may take a while."
           
           TARGET_DIR="/tmp/hyde-rc-runner"
-          # TODO Use master instead of develop when merged
+          # TODO: Use master instead of develop when merged
           ARCHIVE="https://github.com/hydephp/hyde/archive/refs/heads/develop.zip"
           TEMP_ZIP=$(mktemp)
           TEMP_EXTRACT_DIR="${TARGET_DIR}_temp"
@@ -44,14 +59,25 @@ jobs:
           fi
           
           echo -e "\033[33mDownloading test runner scaffolding...\033[0m"
-          wget -q "$ARCHIVE" -O "$TEMP_ZIP"
+          if ! wget -q "$ARCHIVE" -O "$TEMP_ZIP"; then
+            echo "Failed to download archive from $ARCHIVE"
+            exit 1
+          fi
           
           echo -e "\033[33mExtracting archive...\033[0m"
           mkdir -p "$TEMP_EXTRACT_DIR"
-          unzip -q "$TEMP_ZIP" -d "$TEMP_EXTRACT_DIR"
+          if ! unzip -q "$TEMP_ZIP" -d "$TEMP_EXTRACT_DIR"; then
+            echo "Failed to extract archive"
+            exit 1
+          fi
           
           # Get the name of the root directory in the zip file
           ROOT_DIR=$(ls "$TEMP_EXTRACT_DIR" | head -n 1)
+          
+          if [ -z "$ROOT_DIR" ]; then
+            echo "No root directory found in extracted archive"
+            exit 1
+          fi
           
           # Move the contents to the target directory
           mv "$TEMP_EXTRACT_DIR/$ROOT_DIR" "$TARGET_DIR"
@@ -59,11 +85,48 @@ jobs:
           # Clean up
           rm -rf "$TEMP_EXTRACT_DIR"
           rm "$TEMP_ZIP"
+          
+          echo -e "\033[32mTest runner setup complete\033[0m"
+
+      - name: Verify test runner setup
+        run: |
+          TARGET_DIR="/tmp/hyde-rc-runner"
+          
+          if [ ! -d "$TARGET_DIR" ]; then
+            echo "❌ Test runner directory does not exist: $TARGET_DIR"
+            exit 1
+          fi
+          
+          echo "✅ Test runner directory exists"
+          echo "Contents of test runner directory:"
+          ls -la "$TARGET_DIR"
+          
+          if [ ! -f "$TARGET_DIR/composer.json" ]; then
+            echo "❌ composer.json not found in test runner"
+            exit 1
+          fi
+          
+          echo "✅ composer.json found"
 
       - name: Debug configuration
         run: |
-          # Fix the Author configuration in hyde.php to prevent the error
           CONFIG_FILE="/tmp/hyde-rc-runner/config/hyde.php"
+          
+          if [ ! -f "$CONFIG_FILE" ]; then
+            echo "❌ Configuration file not found: $CONFIG_FILE"
+            echo "Available files in config directory:"
+            if [ -d "/tmp/hyde-rc-runner/config" ]; then
+              ls -la "/tmp/hyde-rc-runner/config/"
+            else
+              echo "Config directory does not exist"
+            fi
+            echo "Root directory contents:"
+            ls -la "/tmp/hyde-rc-runner/"
+            exit 1
+          fi
+          
+          echo "✅ Configuration file found"
+          echo "Configuration file contents:"
           cat "$CONFIG_FILE"
           
       - name: Install test package
@@ -73,8 +136,54 @@ jobs:
           echo -e "\033[33mInstalling hyde/realtime-compiler:dev-$BRANCH...\033[0m"
           
           cd "/tmp/hyde-rc-runner"
-          composer config repositories.realtime-compiler path $(realpath $GITHUB_WORKSPACE)
-          composer require --dev hyde/realtime-compiler:dev-$BRANCH --no-progress
+          
+          # Install composer dependencies first
+          if [ -f "composer.json" ]; then
+            echo "Installing test runner dependencies..."
+            composer install --no-dev --prefer-dist --no-progress
+          fi
+          
+          # Add the local package repository
+          composer config repositories.realtime-compiler path "$(realpath "$GITHUB_WORKSPACE")"
+          
+          # Require the package
+          if ! composer require --dev "hyde/realtime-compiler:dev-$BRANCH" --no-progress; then
+            echo "❌ Failed to install hyde/realtime-compiler package"
+            echo "Available branches/tags:"
+            git ls-remote --heads --tags origin
+            exit 1
+          fi
+          
+          echo "✅ Package installed successfully"
+
+      - name: Verify package installation
+        run: |
+          cd "/tmp/hyde-rc-runner"
+          echo "Installed packages:"
+          composer show --dev | grep realtime-compiler || echo "Package not found in composer show"
+          
+          echo "Vendor directory contents:"
+          ls -la vendor/hyde/ || echo "Hyde vendor directory not found"
 
       - name: Run tests with PHPUnit
-        run: vendor/bin/phpunit --colors=always
+        run: |
+          cd "/tmp/hyde-rc-runner"
+          
+          # Check if PHPUnit is available
+          if [ ! -f "vendor/bin/phpunit" ]; then
+            echo "❌ PHPUnit not found. Installing..."
+            composer require --dev phpunit/phpunit --no-progress
+          fi
+          
+          echo "Running PHPUnit tests..."
+          vendor/bin/phpunit --colors=always --verbose
+
+      - name: Cleanup on failure
+        if: failure()
+        run: |
+          echo "🧹 Cleaning up on failure..."
+          echo "Current working directory: $(pwd)"
+          echo "Environment variables:"
+          env | sort
+          echo "Disk usage:"
+          df -h
