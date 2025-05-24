@@ -59,12 +59,20 @@ jobs:
           # Clean up
           rm -rf "$TEMP_EXTRACT_DIR"
           rm "$TEMP_ZIP"
+
+      - name: Debug configuration
+        run: |
+          # Fix the Author configuration in hyde.php to prevent the error
+          CONFIG_FILE="/tmp/hyde-rc-runner/config/hyde.php"
+          cat "$CONFIG_FILE"
           
+      - name: Install test package
+        run: |
           # Junction the package source to the test runner
           BRANCH=${HYDE_RC_BRANCH:-$(git rev-parse --abbrev-ref HEAD || echo "master")}
           echo -e "\033[33mInstalling hyde/realtime-compiler:dev-$BRANCH...\033[0m"
           
-          cd "$TARGET_DIR"
+          cd "/tmp/hyde-rc-runner"
           composer config repositories.realtime-compiler path $(realpath $GITHUB_WORKSPACE)
           composer require --dev hyde/realtime-compiler:dev-$BRANCH --no-progress
 
