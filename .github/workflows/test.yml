@@ -29,7 +29,44 @@ jobs:
           fi
 
       - name: Set up test runner
-        run: php -r 'require_once __DIR__."/vendor/autoload.php"; \Hyde\RealtimeCompiler\Tests\Integration\IntegrationTestCase::setUpTestRunner();'
+        run: |
+          echo -e "\033[33mSetting up test runner...\033[0m This may take a while."
+          
+          TARGET_DIR="/tmp/hyde-rc-runner"
+          # TODO Use master instead of develop when merged
+          ARCHIVE="https://github.com/hydephp/hyde/archive/refs/heads/develop.zip"
+          TEMP_ZIP=$(mktemp)
+          TEMP_EXTRACT_DIR="${TARGET_DIR}_temp"
+          
+          # Remove target directory if it exists
+          if [ -d "$TARGET_DIR" ]; then
+            rm -rf "$TARGET_DIR"
+          fi
+          
+          echo -e "\033[33mDownloading test runner scaffolding...\033[0m"
+          wget -q "$ARCHIVE" -O "$TEMP_ZIP"
+          
+          echo -e "\033[33mExtracting archive...\033[0m"
+          mkdir -p "$TEMP_EXTRACT_DIR"
+          unzip -q "$TEMP_ZIP" -d "$TEMP_EXTRACT_DIR"
+          
+          # Get the name of the root directory in the zip file
+          ROOT_DIR=$(ls "$TEMP_EXTRACT_DIR" | head -n 1)
+          
+          # Move the contents to the target directory
+          mv "$TEMP_EXTRACT_DIR/$ROOT_DIR" "$TARGET_DIR"
+          
+          # Clean up
+          rm -rf "$TEMP_EXTRACT_DIR"
+          rm "$TEMP_ZIP"
+          
+          # Junction the package source to the test runner
+          BRANCH=${HYDE_RC_BRANCH:-$(git rev-parse --abbrev-ref HEAD || echo "master")}
+          echo -e "\033[33mInstalling hyde/realtime-compiler:dev-$BRANCH...\033[0m"
+          
+          cd "$TARGET_DIR"
+          composer config repositories.realtime-compiler path $(realpath $GITHUB_WORKSPACE)
+          composer require --dev hyde/realtime-compiler:dev-$BRANCH --no-progress
 
       - name: Run tests with PHPUnit
         run: vendor/bin/phpunit --colors=always
