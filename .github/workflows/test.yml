@@ -23,7 +23,7 @@ jobs:
         run: |
           echo "HYDE_RC_RUNNER_PATH=/tmp/hyde-rc-runner" >> $GITHUB_ENV
           if [ ${{ github.event_name }} == 'push' ]; then
-            echo "HYDE_RC_RUNNER_BRANCH=develop" >> $GITHUB_ENV
+            echo "HYDE_RC_RUNNER_BRANCH=master" >> $GITHUB_ENV
           else
             echo "HYDE_RC_BRANCH=$GITHUB_SHA" >> $GITHUB_ENV
           fi
