@@ -60,11 +60,12 @@ jobs:
           rm -rf "$TEMP_EXTRACT_DIR"
           rm "$TEMP_ZIP"
 
-      - name: Debug configuration
+      - name: Override framework version
         run: |
-          # Fix the Author configuration in hyde.php to prevent the error
-          CONFIG_FILE="/tmp/hyde-rc-runner/config/hyde.php"
-          cat "$CONFIG_FILE"
+          # TODO Remove this whole step when merged
+          cd "/tmp/hyde-rc-runner"
+          echo -e "\033[33mOverriding hyde/framework to dev-develop...\033[0m"
+          composer require hyde/framework:dev-develop --no-progress
           
       - name: Install test package
         run: |
