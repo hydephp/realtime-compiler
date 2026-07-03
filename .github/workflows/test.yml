@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   integration-tests:
+    if: false # TODO: Remove this once dependent packages are released
     runs-on: ubuntu-latest
 
     steps:
@@ -33,8 +34,7 @@ jobs:
           echo -e "\033[33mSetting up test runner...\033[0m This may take a while."
           
           TARGET_DIR="/tmp/hyde-rc-runner"
-          # TODO Use master instead of develop when merged
-          ARCHIVE="https://github.com/hydephp/hyde/archive/refs/heads/develop.zip"
+          ARCHIVE="https://github.com/hydephp/hyde/archive/refs/heads/master.zip"
           TEMP_ZIP=$(mktemp)
           TEMP_EXTRACT_DIR="${TARGET_DIR}_temp"
           
