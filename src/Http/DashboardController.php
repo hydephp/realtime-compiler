@@ -194,7 +194,7 @@ class DashboardController extends BaseController
             return true;
         }
 
-        // Files with more than 30% non-printable characters in the sample are considered binary
+        // Files with a high fraction of non-printable characters in the sample are considered binary
         $nonPrintable = preg_match_all('/[^\x20-\x7E\t\r\n]/', $sample) ?: 0;
 
         return ($nonPrintable / strlen($sample)) > static::BINARY_FILE_THRESHOLD;
