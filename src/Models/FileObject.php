@@ -38,6 +38,7 @@ class FileObject
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
             'gif' => 'image/gif',
+            'webp' => 'image/webp',
             'json' => 'application/json',
             'js' => 'application/javascript',
         ];

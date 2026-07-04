@@ -299,8 +299,12 @@
                             @foreach(\Hyde\Support\Filesystem\MediaFile::all() as $mediaFile)
                                 <div class="col-lg-4 p-2 d-flex flex-grow-1">
                                     <figure class="card w-100 p-2 mb-0">
-                                        @if(in_array($mediaFile->getExtension(), ['svg', 'png', 'jpg', 'jpeg', 'gif', 'ico']))
+                                        @if(in_array($mediaFile->getExtension(), ['svg', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'webp']))
                                             <img loading="lazy" src="{{ $dashboard->getMediaPreviewLink($mediaFile) }}" alt="{{ $mediaFile->getName() }}" class="object-fit-cover w-100 rounded-2" style="height: 240px;">
+                                        @elseif($dashboard::isMediaFileProbablyBinary($mediaFile))
+                                            <div class="d-flex align-items-center justify-content-center bg-light rounded-2 text-muted" style="height: 240px;">
+                                                No preview available
+                                            </div>
                                         @else
                                             <code style="height: 240px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, white 60%, transparent);" role="presentation">
                                                 @if($dashboard::isMediaFileProbablyMinified($mediaFile->getContents()))
