@@ -53,9 +53,6 @@ class DashboardController extends BaseController
         'The dashboard can update your project files. You can disable this by setting `server.dashboard.interactive` to `false` in `config/hyde.php`.',
     ];
 
-    /** Files with more than this fraction of non-printable characters in the sampled bytes are considered binary. */
-    protected const BINARY_FILE_THRESHOLD = 0.3;
-
     public function __construct(?Request $request = null)
     {
         parent::__construct($request);
@@ -178,26 +175,6 @@ class DashboardController extends BaseController
     public static function isMediaFileProbablyMinified(string $contents): bool
     {
         return substr_count(trim($contents), "\n") < 3 && strlen($contents) > 200;
-    }
-
-    /** @internal */
-    public static function isMediaFileProbablyBinary(MediaFile $mediaFile): bool
-    {
-        // Only read the first 512 bytes so large binary files don't need to be loaded into memory
-        $sample = @file_get_contents($mediaFile->getAbsolutePath(), false, null, 0, 512);
-
-        if (! $sample) {
-            return false;
-        }
-
-        if (str_contains($sample, "\0")) {
-            return true;
-        }
-
-        // Files with a high fraction of non-printable characters in the sample are considered binary
-        $nonPrintable = preg_match_all('/[^\x20-\x7E\t\r\n]/', $sample) ?: 0;
-
-        return ($nonPrintable / strlen($sample)) > static::BINARY_FILE_THRESHOLD;
     }
 
     /** @internal */

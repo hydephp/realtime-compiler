@@ -301,11 +301,7 @@
                                     <figure class="card w-100 p-2 mb-0">
                                         @if(in_array($mediaFile->getExtension(), ['svg', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'webp']))
                                             <img loading="lazy" src="{{ $dashboard->getMediaPreviewLink($mediaFile) }}" alt="{{ $mediaFile->getName() }}" class="object-fit-cover w-100 rounded-2" style="height: 240px;">
-                                        @elseif($dashboard::isMediaFileProbablyBinary($mediaFile))
-                                            <div class="d-flex align-items-center justify-content-center bg-light rounded-2 text-muted" style="height: 240px;">
-                                                No preview available
-                                            </div>
-                                        @else
+                                        @elseif(in_array($mediaFile->getExtension(), ['css', 'js']))
                                             <code style="height: 240px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, white 60%, transparent);" role="presentation">
                                                 @if($dashboard::isMediaFileProbablyMinified($mediaFile->getContents()))
                                                     <pre style="white-space: normal;">{{ $dashboard::highlightMediaLibraryCode($mediaFile->getContents()) }}</pre>
@@ -313,6 +309,10 @@
                                                     <pre class="overflow-hidden">{{ $dashboard::highlightMediaLibraryCode($mediaFile->getContents()) }}</pre>
                                                 @endif
                                             </code>
+                                        @else
+                                            <div class="d-flex align-items-center justify-content-center bg-light rounded-2 text-muted" style="height: 240px;">
+                                                No preview available
+                                            </div>
                                         @endif
                                         <figcaption class="container mt-3">
                                             <div class="row flex-nowrap">
