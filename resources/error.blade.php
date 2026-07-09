@@ -1125,7 +1125,7 @@
                 case 'chatgpt':
                     return 'https://chatgpt.com/?q=' + encoded;
                 case 'claude':
-                    return 'claude://claude.ai/new?q=' + encoded;
+                    return 'https://claude.ai/new?q=' + encoded;
                 case 'perplexity':
                     return 'https://www.perplexity.ai/search?q=' + encoded;
                 default:
@@ -1140,12 +1140,7 @@
                 return;
             }
 
-            if (provider === 'claude') {
-                // Deep link into the Claude Desktop app rather than a browser tab.
-                window.location.href = url;
-            } else {
-                window.open(url, '_blank', 'noopener');
-            }
+            window.open(url, '_blank', 'noopener');
         }
 
         document.querySelectorAll('.ai-provider').forEach(function (button) {
