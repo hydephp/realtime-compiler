@@ -6,7 +6,9 @@ namespace Hyde\RealtimeCompiler\Http;
 
 use PhpToken;
 use Throwable;
+use OutOfBoundsException;
 use Desilva\Microserve\Response;
+use Composer\InstalledVersions;
 use Illuminate\Support\Facades\Blade;
 
 /**
@@ -23,6 +25,7 @@ class ExceptionHandler
             'exception' => $exception,
             'statusCode' => $statusCode,
             'frames' => static::buildFrames($exception),
+            'environment' => static::buildEnvironment(),
         ]);
 
         return Response::make($statusCode, 'Internal Server Error', [
@@ -59,6 +62,52 @@ class ExceptionHandler
 
             return $frame;
         }, $frames, array_keys($frames)));
+    }
+
+    /** @return array{phpVersion: string, hydeVersion: string, os: string, getData: string, postData: string, files: string, cookies: string, sessionId: ?string, time: string} */
+    protected static function buildEnvironment(): array
+    {
+        return [
+            'phpVersion' => PHP_VERSION,
+            'hydeVersion' => static::packageVersion('hyde/hyde'),
+            'os' => static::operatingSystemName(),
+            'getData' => static::describeCount($_GET, 'field'),
+            'postData' => static::describeCount($_POST, 'field'),
+            'files' => static::describeCount($_FILES, 'file'),
+            'cookies' => static::describeCount($_COOKIE, 'cookie'),
+            'sessionId' => $_COOKIE['PHPSESSID'] ?? (session_id() ?: null),
+            'time' => date('M j, Y, g:i:s A', (int) ($_SERVER['REQUEST_TIME_FLOAT'] ?? time())),
+        ];
+    }
+
+    protected static function packageVersion(string $package): string
+    {
+        try {
+            return InstalledVersions::getPrettyVersion($package) ?? 'unreleased';
+        } catch (OutOfBoundsException) {
+            return 'unreleased';
+        }
+    }
+
+    protected static function operatingSystemName(): string
+    {
+        return match (PHP_OS_FAMILY) {
+            'Darwin' => 'macOS',
+            'Windows' => 'Windows',
+            'Linux' => 'Linux',
+            default => PHP_OS_FAMILY,
+        };
+    }
+
+    protected static function describeCount(array $data, string $label): string
+    {
+        $count = count($data);
+
+        if ($count === 0) {
+            return 'empty';
+        }
+
+        return $count.' '.$label.($count === 1 ? '' : 's');
     }
 
     protected static function relativePath(string $path): string

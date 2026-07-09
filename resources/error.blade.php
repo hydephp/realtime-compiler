@@ -41,15 +41,12 @@
         html, body {
             margin: 0;
             padding: 0;
-            height: 100%;
         }
 
         body {
             background: var(--bg);
             color: var(--text);
             font-family: var(--font-ui);
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
         }
 
@@ -60,7 +57,6 @@
             padding: 12px 20px;
             background: var(--bg-panel);
             border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
         }
 
         .logo {
@@ -84,16 +80,18 @@
         }
 
         .layout {
-            flex: 1;
             display: grid;
             grid-template-columns: minmax(280px, 340px) 1fr;
-            min-height: 0;
+            align-items: start;
         }
 
         /* Stack trace sidebar */
         aside.stack-trace {
             background: var(--bg-panel);
             border-right: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            max-height: 100vh;
             overflow-y: auto;
         }
 
@@ -189,8 +187,6 @@
 
         /* Main content */
         main.content {
-            display: flex;
-            flex-direction: column;
             min-width: 0;
         }
 
@@ -260,10 +256,7 @@
 
         /* Code preview */
         section.code-preview {
-            flex: 1;
             padding: 20px 24px;
-            overflow: auto;
-            min-height: 0;
         }
 
         .code-panel.hidden {
@@ -363,6 +356,122 @@
         .tok-number { color: #b5cea1; }
         .tok-keyword { color: var(--purple); }
         .tok-type { color: var(--teal); }
+
+        /* Environment & request panel */
+        section.environment-panel {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .env-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--bg-panel);
+            padding: 20px;
+        }
+
+        .env-heading {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .env-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .env-stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 160px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            background: var(--bg-elevated);
+        }
+
+        .env-icon {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .env-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .env-icon.icon-php {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+        }
+
+        .env-icon.icon-hyde {
+            background: rgba(197, 134, 192, 0.15);
+            color: var(--purple);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .env-icon.icon-os {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+
+        .env-stat-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .env-stat-value {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .env-grid {
+            display: grid;
+            grid-template-columns: auto 1fr auto 1fr;
+            column-gap: 20px;
+            row-gap: 12px;
+            align-items: baseline;
+            font-size: 13px;
+        }
+
+        .env-key {
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .env-value {
+            color: var(--text);
+            word-break: break-all;
+        }
+
+        .env-value.mono {
+            font-family: var(--font-mono);
+            font-size: 12px;
+        }
+
+        .env-key.full {
+            grid-column: 1;
+        }
+
+        .env-value.full {
+            grid-column: 2 / -1;
+        }
     </style>
 </head>
 <body>
@@ -439,6 +548,62 @@
         </section>
     </main>
 </div>
+<section class="environment-panel">
+    <div class="env-card">
+        <div class="env-heading">Environment &amp; Request</div>
+        <div class="env-stats">
+            <div class="env-stat">
+                <span class="env-icon icon-php">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                </span>
+                <div>
+                    <div class="env-stat-label">PHP</div>
+                    <div class="env-stat-value">{{ $environment['phpVersion'] }}</div>
+                </div>
+            </div>
+            <div class="env-stat">
+                <span class="env-icon icon-hyde">H</span>
+                <div>
+                    <div class="env-stat-label">Hyde</div>
+                    <div class="env-stat-value">{{ $environment['hydeVersion'] }}</div>
+                </div>
+            </div>
+            <div class="env-stat">
+                <span class="env-icon icon-os">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="13" rx="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </span>
+                <div>
+                    <div class="env-stat-label">OS</div>
+                    <div class="env-stat-value">{{ $environment['os'] }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="env-grid">
+            <span class="env-key">GET Data</span>
+            <span class="env-value">{{ $environment['getData'] }}</span>
+            <span class="env-key">POST Data</span>
+            <span class="env-value">{{ $environment['postData'] }}</span>
+
+            <span class="env-key">Files</span>
+            <span class="env-value">{{ $environment['files'] }}</span>
+            <span class="env-key">Cookies</span>
+            <span class="env-value">{{ $environment['cookies'] }}</span>
+
+            <span class="env-key full">Session ID</span>
+            <span class="env-value full mono">{{ $environment['sessionId'] ?? 'None' }}</span>
+
+            <span class="env-key full">Time</span>
+            <span class="env-value full">{{ $environment['time'] }}</span>
+        </div>
+    </div>
+</section>
 <script>
     document.querySelectorAll('.frame').forEach(function (frame) {
         frame.addEventListener('click', function () {
