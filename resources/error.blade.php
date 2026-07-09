@@ -425,17 +425,35 @@
         .tok-keyword { color: var(--purple); }
         .tok-type { color: var(--teal); }
 
-        /* Environment & request panel */
-        section.environment-panel {
+        /* Info panels row (Ask AI, Environment & Request, and any future panels) */
+        .info-panels {
             padding: 20px 24px;
             border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            align-items: start;
         }
 
-        .env-card {
+        .env-card,
+        .ai-card {
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--bg-panel);
             padding: 20px;
+        }
+
+        .panel-heading-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-icon {
+            width: 15px;
+            height: 15px;
+            color: var(--purple);
+            flex-shrink: 0;
         }
 
         .env-heading {
@@ -445,6 +463,16 @@
             text-transform: uppercase;
             color: var(--text-muted);
             margin-bottom: 16px;
+        }
+
+        .panel-heading-row .env-heading {
+            margin-bottom: 0;
+        }
+
+        .ai-subtitle {
+            margin: 6px 0 16px;
+            font-size: 12px;
+            color: var(--text-dim);
         }
 
         .env-stats {
@@ -540,6 +568,120 @@
         .env-value.full {
             grid-column: 2 / -1;
         }
+
+        /* Ask AI panel */
+        .ai-providers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .ai-provider {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+            color: var(--text);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .ai-provider:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-dim);
+        }
+
+        .ai-provider-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ai-provider-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-chatgpt {
+            background: rgba(16, 163, 127, 0.15);
+            color: #10a37f;
+        }
+
+        .icon-claude {
+            background: rgba(217, 119, 87, 0.15);
+            color: #d97757;
+        }
+
+        .icon-perplexity {
+            background: rgba(32, 184, 205, 0.15);
+            color: #20b8cd;
+        }
+
+        .ai-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+            padding: 4px 4px 4px 12px;
+        }
+
+        .ai-input {
+            flex: 1;
+            min-width: 0;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            padding: 8px 0;
+        }
+
+        .ai-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .ai-send {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: var(--bg-panel);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .ai-send:hover {
+            color: var(--text);
+            background: var(--bg-hover);
+        }
+
+        .ai-send svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        .ai-note {
+            margin: 12px 0 0;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
     </style>
 </head>
 <body>
@@ -632,8 +774,59 @@
                 </div>
             @endforeach
         </section>
-        <section class="environment-panel">
-            <div class="env-card">
+        <div class="info-panels">
+            <section class="ai-card">
+                <div class="panel-heading-row">
+                    <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"></path>
+                    </svg>
+                    <div class="env-heading">Ask AI</div>
+                </div>
+                <p class="ai-subtitle">Get help from AI assistants</p>
+                <div class="ai-providers">
+                    <button type="button" class="ai-provider" data-provider="chatgpt">
+                        <span class="ai-provider-icon icon-chatgpt">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <circle cx="12" cy="7" r="4"></circle>
+                                <circle cx="8" cy="15" r="4"></circle>
+                                <circle cx="16" cy="15" r="4"></circle>
+                            </svg>
+                        </span>
+                        <span>ChatGPT</span>
+                    </button>
+                    <button type="button" class="ai-provider" data-provider="claude">
+                        <span class="ai-provider-icon icon-claude">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                <line x1="12" y1="2" x2="12" y2="22"></line>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <line x1="4.9" y1="4.9" x2="19.1" y2="19.1"></line>
+                                <line x1="19.1" y1="4.9" x2="4.9" y2="19.1"></line>
+                            </svg>
+                        </span>
+                        <span>Claude</span>
+                    </button>
+                    <button type="button" class="ai-provider" data-provider="perplexity">
+                        <span class="ai-provider-icon icon-perplexity">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                                <polygon points="12,2 22,12 12,22 2,12"></polygon>
+                                <polygon points="12,7 17,12 12,17 7,12"></polygon>
+                            </svg>
+                        </span>
+                        <span>Perplexity</span>
+                    </button>
+                </div>
+                <div class="ai-input-row">
+                    <input type="text" id="aiInstruction" class="ai-input" placeholder="Explain this error and suggest a fix">
+                    <button type="button" class="ai-send" id="aiSendButton" data-provider="chatgpt" title="Send to ChatGPT">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <p class="ai-note">Opens the selected AI assistant in a new tab with your error details prefilled. Nothing is sent from this server.</p>
+            </section>
+            <section class="env-card">
                 <div class="env-heading">Environment &amp; Request</div>
                 <div class="env-stats">
                     <div class="env-stat">
@@ -686,8 +879,8 @@
                     <span class="env-key full">Time</span>
                     <span class="env-value full">{{ $environment['time'] }}</span>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 </div>
 <script>
@@ -767,6 +960,95 @@
             setTimeout(reset, 2500);
         });
     });
+
+    (function () {
+        var report = JSON.parse(document.getElementById('reportData').textContent);
+        var instructionInput = document.getElementById('aiInstruction');
+        var maxPromptLength = 6000;
+
+        function getActiveCodeText() {
+            var panel = document.querySelector('.code-panel:not(.hidden)');
+
+            if (!panel) {
+                return null;
+            }
+
+            var lines = panel.querySelectorAll('.line-code pre');
+
+            if (!lines.length) {
+                return null;
+            }
+
+            return Array.prototype.map.call(lines, function (el) {
+                return el.textContent;
+            }).join('\n');
+        }
+
+        function buildPrompt() {
+            var instruction = (instructionInput.value || instructionInput.placeholder).trim();
+            var codeText = getActiveCodeText();
+            var parts = [instruction, '', report];
+
+            if (codeText) {
+                parts.push('', 'Code:', '```php', codeText, '```');
+            }
+
+            var prompt = parts.join('\n');
+
+            if (prompt.length > maxPromptLength) {
+                prompt = prompt.slice(0, maxPromptLength) + '\n... (truncated)';
+            }
+
+            return prompt;
+        }
+
+        function providerUrl(provider, prompt) {
+            var encoded = encodeURIComponent(prompt);
+
+            switch (provider) {
+                case 'chatgpt':
+                    return 'https://chatgpt.com/?q=' + encoded;
+                case 'claude':
+                    return 'claude://claude.ai/new?q=' + encoded;
+                case 'perplexity':
+                    return 'https://www.perplexity.ai/search?q=' + encoded;
+                default:
+                    return null;
+            }
+        }
+
+        function openProvider(provider) {
+            var url = providerUrl(provider, buildPrompt());
+
+            if (!url) {
+                return;
+            }
+
+            if (provider === 'claude') {
+                // Deep link into the Claude Desktop app rather than a browser tab.
+                window.location.href = url;
+            } else {
+                window.open(url, '_blank', 'noopener');
+            }
+        }
+
+        document.querySelectorAll('.ai-provider').forEach(function (button) {
+            button.addEventListener('click', function () {
+                openProvider(button.getAttribute('data-provider'));
+            });
+        });
+
+        document.getElementById('aiSendButton').addEventListener('click', function () {
+            openProvider(this.getAttribute('data-provider'));
+        });
+
+        instructionInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                openProvider(document.getElementById('aiSendButton').getAttribute('data-provider'));
+            }
+        });
+    })();
 </script>
 </body>
 </html>
