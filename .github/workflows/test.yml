@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   integration-tests:
+    if: false # TODO: Remove this once dependent packages are released
     runs-on: ubuntu-latest
 
     steps:
