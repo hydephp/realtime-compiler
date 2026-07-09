@@ -80,8 +80,64 @@
             color: var(--text);
         }
 
-        .copy-report {
+        .topbar-actions {
             margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-button-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 6px 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-elevated);
+        }
+
+        .ai-group-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-right: 4px;
+        }
+
+        .ai-provider-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border: none;
+            border-radius: 5px;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .ai-provider-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        .ai-provider-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .ai-provider-btn.icon-chatgpt {
+            color: #10a37f;
+        }
+
+        .ai-provider-btn.icon-claude {
+            color: #d97757;
+        }
+
+        .ai-provider-btn.icon-perplexity {
+            color: #20b8cd;
+        }
+
+        .copy-report {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -436,7 +492,6 @@
         }
 
         .env-card,
-        .ai-card,
         .docs-card {
             border: 1px solid var(--border);
             border-radius: 10px;
@@ -468,12 +523,6 @@
 
         .panel-heading-row .env-heading {
             margin-bottom: 0;
-        }
-
-        .ai-subtitle {
-            margin: 6px 0 16px;
-            font-size: 12px;
-            color: var(--text-dim);
         }
 
         .env-stats {
@@ -570,120 +619,6 @@
             grid-column: 2 / -1;
         }
 
-        /* Ask AI panel */
-        .ai-providers {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .ai-provider {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 8px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-elevated);
-            color: var(--text);
-            font-family: var(--font-ui);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .ai-provider:hover {
-            background: var(--bg-hover);
-            border-color: var(--text-dim);
-        }
-
-        .ai-provider-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .ai-provider-icon svg {
-            width: 18px;
-            height: 18px;
-        }
-
-        .icon-chatgpt {
-            background: rgba(16, 163, 127, 0.15);
-            color: #10a37f;
-        }
-
-        .icon-claude {
-            background: rgba(217, 119, 87, 0.15);
-            color: #d97757;
-        }
-
-        .icon-perplexity {
-            background: rgba(32, 184, 205, 0.15);
-            color: #20b8cd;
-        }
-
-        .ai-input-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--bg-elevated);
-            padding: 4px 4px 4px 12px;
-        }
-
-        .ai-input {
-            flex: 1;
-            min-width: 0;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text);
-            font-family: var(--font-ui);
-            font-size: 13px;
-            padding: 8px 0;
-        }
-
-        .ai-input::placeholder {
-            color: var(--text-dim);
-        }
-
-        .ai-send {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            border: none;
-            background: var(--bg-panel);
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .ai-send:hover {
-            color: var(--text);
-            background: var(--bg-hover);
-        }
-
-        .ai-send svg {
-            width: 15px;
-            height: 15px;
-        }
-
-        .ai-note {
-            margin: 12px 0 0;
-            font-size: 11px;
-            color: var(--text-dim);
-        }
-
         /* Documentation panel */
         .docs-links {
             display: flex;
@@ -772,13 +707,39 @@
 <header class="topbar">
     <span class="logo">H</span>
     <span class="brand">Hyde Exception Handler</span>
-    <button type="button" class="copy-report" id="copyReportButton">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="8" y="2" width="8" height="4" rx="1"></rect>
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-        </svg>
-        <span id="copyReportButtonLabel">Copy Report</span>
-    </button>
+    <div class="topbar-actions">
+        <div class="ai-button-group">
+            <span class="ai-group-label">Ask AI</span>
+            <button type="button" class="ai-provider-btn icon-chatgpt ai-provider" data-provider="chatgpt" title="Ask ChatGPT about this error">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                    <circle cx="12" cy="7" r="4"></circle>
+                    <circle cx="8" cy="15" r="4"></circle>
+                    <circle cx="16" cy="15" r="4"></circle>
+                </svg>
+            </button>
+            <button type="button" class="ai-provider-btn icon-claude ai-provider" data-provider="claude" title="Ask Claude about this error">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.9" y1="4.9" x2="19.1" y2="19.1"></line>
+                    <line x1="19.1" y1="4.9" x2="4.9" y2="19.1"></line>
+                </svg>
+            </button>
+            <button type="button" class="ai-provider-btn icon-perplexity ai-provider" data-provider="perplexity" title="Ask Perplexity about this error">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                    <polygon points="12,2 22,12 12,22 2,12"></polygon>
+                    <polygon points="12,7 17,12 12,17 7,12"></polygon>
+                </svg>
+            </button>
+        </div>
+        <button type="button" class="copy-report" id="copyReportButton">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            </svg>
+            <span id="copyReportButtonLabel">Copy Report</span>
+        </button>
+    </div>
 </header>
 <script id="reportData" type="application/json">{!! str_replace('</', '<\/', json_encode($report)) !!}</script>
 <div class="layout">
@@ -930,57 +891,6 @@
                     </a>
                 </div>
             </section>
-            <section class="ai-card">
-                <div class="panel-heading-row">
-                    <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z"></path>
-                    </svg>
-                    <div class="env-heading">Ask AI</div>
-                </div>
-                <p class="ai-subtitle">Get help from AI assistants</p>
-                <div class="ai-providers">
-                    <button type="button" class="ai-provider" data-provider="chatgpt">
-                        <span class="ai-provider-icon icon-chatgpt">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-                                <circle cx="12" cy="7" r="4"></circle>
-                                <circle cx="8" cy="15" r="4"></circle>
-                                <circle cx="16" cy="15" r="4"></circle>
-                            </svg>
-                        </span>
-                        <span>ChatGPT</span>
-                    </button>
-                    <button type="button" class="ai-provider" data-provider="claude">
-                        <span class="ai-provider-icon icon-claude">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                <line x1="12" y1="2" x2="12" y2="22"></line>
-                                <line x1="2" y1="12" x2="22" y2="12"></line>
-                                <line x1="4.9" y1="4.9" x2="19.1" y2="19.1"></line>
-                                <line x1="19.1" y1="4.9" x2="4.9" y2="19.1"></line>
-                            </svg>
-                        </span>
-                        <span>Claude</span>
-                    </button>
-                    <button type="button" class="ai-provider" data-provider="perplexity">
-                        <span class="ai-provider-icon icon-perplexity">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
-                                <polygon points="12,2 22,12 12,22 2,12"></polygon>
-                                <polygon points="12,7 17,12 12,17 7,12"></polygon>
-                            </svg>
-                        </span>
-                        <span>Perplexity</span>
-                    </button>
-                </div>
-                <div class="ai-input-row">
-                    <input type="text" id="aiInstruction" class="ai-input" placeholder="Explain this error and suggest a fix">
-                    <button type="button" class="ai-send" id="aiSendButton" data-provider="chatgpt" title="Send to ChatGPT">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </button>
-                </div>
-                <p class="ai-note">Opens the selected AI assistant in a new tab with your error details prefilled. Nothing is sent from this server.</p>
-            </section>
             <section class="env-card">
                 <div class="env-heading">Environment &amp; Request</div>
                 <div class="env-stats">
@@ -1118,8 +1028,8 @@
 
     (function () {
         var report = JSON.parse(document.getElementById('reportData').textContent);
-        var instructionInput = document.getElementById('aiInstruction');
         var maxPromptLength = 6000;
+        var defaultInstruction = 'Explain this error and suggest a fix';
 
         function getActiveCodeText() {
             var panel = document.querySelector('.code-panel:not(.hidden)');
@@ -1140,9 +1050,8 @@
         }
 
         function buildPrompt() {
-            var instruction = (instructionInput.value || instructionInput.placeholder).trim();
             var codeText = getActiveCodeText();
-            var parts = [instruction, '', report];
+            var parts = [defaultInstruction, '', report];
 
             if (codeText) {
                 parts.push('', 'Code:', '```php', codeText, '```');
@@ -1191,17 +1100,6 @@
             button.addEventListener('click', function () {
                 openProvider(button.getAttribute('data-provider'));
             });
-        });
-
-        document.getElementById('aiSendButton').addEventListener('click', function () {
-            openProvider(this.getAttribute('data-provider'));
-        });
-
-        instructionInput.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                openProvider(document.getElementById('aiSendButton').getAttribute('data-provider'));
-            }
         });
     })();
 </script>
