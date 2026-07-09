@@ -632,64 +632,64 @@
                 </div>
             @endforeach
         </section>
+        <section class="environment-panel">
+            <div class="env-card">
+                <div class="env-heading">Environment &amp; Request</div>
+                <div class="env-stats">
+                    <div class="env-stat">
+                        <span class="env-icon icon-php">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                        </span>
+                        <div>
+                            <div class="env-stat-label">PHP</div>
+                            <div class="env-stat-value">{{ $environment['phpVersion'] }}</div>
+                        </div>
+                    </div>
+                    <div class="env-stat">
+                        <span class="env-icon icon-hyde">H</span>
+                        <div>
+                            <div class="env-stat-label">Hyde</div>
+                            <div class="env-stat-value">{{ $environment['hydeVersion'] }}</div>
+                        </div>
+                    </div>
+                    <div class="env-stat">
+                        <span class="env-icon icon-os">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="13" rx="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </span>
+                        <div>
+                            <div class="env-stat-label">OS</div>
+                            <div class="env-stat-value">{{ $environment['os'] }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="env-grid">
+                    <span class="env-key">GET Data</span>
+                    <span class="env-value">{{ $environment['getData'] }}</span>
+                    <span class="env-key">POST Data</span>
+                    <span class="env-value">{{ $environment['postData'] }}</span>
+
+                    <span class="env-key">Files</span>
+                    <span class="env-value">{{ $environment['files'] }}</span>
+                    <span class="env-key">Cookies</span>
+                    <span class="env-value">{{ $environment['cookies'] }}</span>
+
+                    <span class="env-key full">Session ID</span>
+                    <span class="env-value full mono">{{ $environment['sessionId'] ?? 'None' }}</span>
+
+                    <span class="env-key full">Time</span>
+                    <span class="env-value full">{{ $environment['time'] }}</span>
+                </div>
+            </div>
+        </section>
     </main>
 </div>
-<section class="environment-panel">
-    <div class="env-card">
-        <div class="env-heading">Environment &amp; Request</div>
-        <div class="env-stats">
-            <div class="env-stat">
-                <span class="env-icon icon-php">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="16 18 22 12 16 6"></polyline>
-                        <polyline points="8 6 2 12 8 18"></polyline>
-                    </svg>
-                </span>
-                <div>
-                    <div class="env-stat-label">PHP</div>
-                    <div class="env-stat-value">{{ $environment['phpVersion'] }}</div>
-                </div>
-            </div>
-            <div class="env-stat">
-                <span class="env-icon icon-hyde">H</span>
-                <div>
-                    <div class="env-stat-label">Hyde</div>
-                    <div class="env-stat-value">{{ $environment['hydeVersion'] }}</div>
-                </div>
-            </div>
-            <div class="env-stat">
-                <span class="env-icon icon-os">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="4" width="20" height="13" rx="2"></rect>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
-                </span>
-                <div>
-                    <div class="env-stat-label">OS</div>
-                    <div class="env-stat-value">{{ $environment['os'] }}</div>
-                </div>
-            </div>
-        </div>
-        <div class="env-grid">
-            <span class="env-key">GET Data</span>
-            <span class="env-value">{{ $environment['getData'] }}</span>
-            <span class="env-key">POST Data</span>
-            <span class="env-value">{{ $environment['postData'] }}</span>
-
-            <span class="env-key">Files</span>
-            <span class="env-value">{{ $environment['files'] }}</span>
-            <span class="env-key">Cookies</span>
-            <span class="env-value">{{ $environment['cookies'] }}</span>
-
-            <span class="env-key full">Session ID</span>
-            <span class="env-value full mono">{{ $environment['sessionId'] ?? 'None' }}</span>
-
-            <span class="env-key full">Time</span>
-            <span class="env-value full">{{ $environment['time'] }}</span>
-        </div>
-    </div>
-</section>
 <script>
     document.querySelectorAll('.frame').forEach(function (frame) {
         frame.addEventListener('click', function () {
