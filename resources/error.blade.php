@@ -779,7 +779,7 @@
         </button>
     </div>
 </header>
-<script id="reportData" type="application/json">{!! str_replace('</', '<\/', json_encode($report)) !!}</script>
+<script id="reportData" type="application/json">{!! json_encode($report, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) !!}</script>
 <div class="layout">
     <aside class="stack-trace">
         <div class="panel-heading">

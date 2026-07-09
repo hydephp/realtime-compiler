@@ -39,7 +39,7 @@ class OpenInEditorController extends BaseController
             $file = $this->request->data['file'] ?? $this->abort(400, 'Must provide a file path');
             $path = $this->resolvePath($file) ?? $this->abort(403, 'Refusing to open a file outside the project directory');
 
-            if (! str_ends_with($path, '.php')) {
+            if (! str_ends_with(strtolower($path), '.php')) {
                 $this->abort(403, 'Refusing to open a non-PHP file');
             }
 
@@ -47,7 +47,7 @@ class OpenInEditorController extends BaseController
                 $this->abort(404, 'File not found');
             }
 
-            Process::run(sprintf('%s %s', $this->findGeneralOpenBinary(), escapeshellarg($path)))->throw();
+            Process::run([...$this->findGeneralOpenBinary(), $path])->throw();
         } catch (HttpException $exception) {
             return $this->sendJsonErrorResponse($exception->getStatusCode(), $exception->getMessage());
         }
@@ -78,13 +78,14 @@ class OpenInEditorController extends BaseController
         return $real;
     }
 
-    protected function findGeneralOpenBinary(): string
+    /** @return array<int, string> */
+    protected function findGeneralOpenBinary(): array
     {
         return match (PHP_OS_FAMILY) {
             // Using PowerShell allows us to open the file in the background
-            'Windows' => 'powershell Start-Process',
-            'Darwin' => 'open',
-            'Linux' => 'xdg-open',
+            'Windows' => ['powershell', 'Start-Process'],
+            'Darwin' => ['open'],
+            'Linux' => ['xdg-open'],
             default => $this->abort(500,
                 sprintf("Unable to find a matching 'open' binary for OS family '%s'", PHP_OS_FAMILY)
             )

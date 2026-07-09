@@ -34,7 +34,7 @@ class ExceptionHandler
             'csrfToken' => static::csrfToken(),
         ]);
 
-        return Response::make($statusCode, 'Internal Server Error', [
+        return Response::make($statusCode, BaseController::matchStatusCode($statusCode), [
             'Content-Type' => 'text/html',
             'Content-Length' => strlen($html),
             'body' => $html,

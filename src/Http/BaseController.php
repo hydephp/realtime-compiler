@@ -47,7 +47,7 @@ abstract class BaseController
         throw new HttpException($code, $message);
     }
 
-    protected function matchStatusCode(int $statusCode): string
+    protected static function matchStatusCode(int $statusCode): string
     {
         return match ($statusCode) {
             200 => 'OK',
