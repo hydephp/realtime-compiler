@@ -259,7 +259,7 @@
         li.frame {
             display: flex;
             gap: 10px;
-            padding: 10px 16px;
+            padding: 11px 16px;
             border-bottom: 1px solid var(--border);
             border-left: 3px solid transparent;
             cursor: pointer;
