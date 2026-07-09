@@ -70,19 +70,21 @@ class ExceptionHandler
         }, $frames, array_keys($frames)));
     }
 
-    /** @return array{phpVersion: string, hydeVersion: string, os: string, getData: string, postData: string, files: string, cookies: string, sessionId: ?string, time: string} */
+    /** @return array{phpVersion: string, hydeVersion: string, os: string, frameworkVersion: string, rtcVersion: string, request: string, time: string, timeIso: string} */
     protected static function buildEnvironment(): array
     {
+        $timestamp = (int) ($_SERVER['REQUEST_TIME_FLOAT'] ?? time());
+
         return [
             'phpVersion' => PHP_VERSION,
             'hydeVersion' => static::packageVersion('hyde/hyde'),
             'os' => static::operatingSystemName(),
-            'getData' => static::describeCount($_GET, 'field'),
-            'postData' => static::describeCount($_POST, 'field'),
-            'files' => static::describeCount($_FILES, 'file'),
-            'cookies' => static::describeCount($_COOKIE, 'cookie'),
-            'sessionId' => $_COOKIE['PHPSESSID'] ?? (session_id() ?: null),
-            'time' => date('M j, Y, g:i:s A', (int) ($_SERVER['REQUEST_TIME_FLOAT'] ?? time())),
+            'frameworkVersion' => static::packageVersion('hyde/framework'),
+            'rtcVersion' => static::packageVersion('hyde/realtime-compiler'),
+            'request' => sprintf('%s %s', $_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/'),
+            // Rendered in the browser's own locale and timezone via Intl.DateTimeFormat; this is the pre-JS/report fallback.
+            'time' => date('M j, Y, g:i:s A', $timestamp),
+            'timeIso' => date(DATE_ATOM, $timestamp),
         ];
     }
 
@@ -90,7 +92,7 @@ class ExceptionHandler
      * Build a plain-text report of the exception, suitable for pasting into an AI assistant or issue tracker.
      *
      * @param  array<int, array{number: int, class: ?string, function: ?string, file: ?string, relativeFile: ?string, line: ?int, snippet: ?array}>  $frames
-     * @param  array{phpVersion: string, hydeVersion: string, os: string, getData: string, postData: string, files: string, cookies: string, sessionId: ?string, time: string}  $environment
+     * @param  array{phpVersion: string, hydeVersion: string, os: string, frameworkVersion: string, rtcVersion: string, request: string, time: string, timeIso: string}  $environment
      */
     protected static function buildReport(Throwable $exception, array $frames, array $environment, int $statusCode): string
     {
@@ -113,10 +115,10 @@ class ExceptionHandler
         $lines[] = 'Environment:';
         $lines[] = sprintf('- PHP: %s', $environment['phpVersion']);
         $lines[] = sprintf('- Hyde: %s', $environment['hydeVersion']);
-        $lines[] = sprintf('- Framework: %s', static::packageVersion('hyde/framework'));
-        $lines[] = sprintf('- Realtime Compiler: %s', static::packageVersion('hyde/realtime-compiler'));
+        $lines[] = sprintf('- Framework: %s', $environment['frameworkVersion']);
+        $lines[] = sprintf('- Realtime Compiler: %s', $environment['rtcVersion']);
         $lines[] = sprintf('- OS: %s', $environment['os']);
-        $lines[] = sprintf('- Request: %s %s', $_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/');
+        $lines[] = sprintf('- Request: %s', $environment['request']);
         $lines[] = sprintf('- Time: %s', $environment['time']);
 
         return implode("\n", $lines);
@@ -148,17 +150,6 @@ class ExceptionHandler
             'Linux' => 'Linux',
             default => PHP_OS_FAMILY,
         };
-    }
-
-    protected static function describeCount(array $data, string $label): string
-    {
-        $count = count($data);
-
-        if ($count === 0) {
-            return 'empty';
-        }
-
-        return $count.' '.$label.($count === 1 ? '' : 's');
     }
 
     protected static function relativePath(string $path): string

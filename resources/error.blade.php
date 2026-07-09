@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ $csrfToken }}">
-    <title>{{ class_basename($exception) }} - Hyde Exception Handler</title>
+    <title>{{ class_basename($exception) }} - HydePHP</title>
     <style>
         :root {
             color-scheme: dark;
@@ -536,11 +536,12 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 16px;
-            align-items: start;
         }
 
         .env-card,
         .docs-card {
+            display: flex;
+            flex-direction: column;
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--bg-panel);
@@ -566,6 +567,7 @@
             letter-spacing: 0.06em;
             text-transform: uppercase;
             color: var(--text-muted);
+            line-height: 15px;
             margin-bottom: 16px;
         }
 
@@ -637,7 +639,7 @@
 
         .env-grid {
             display: grid;
-            grid-template-columns: auto 1fr auto 1fr;
+            grid-template-columns: auto auto auto 1fr;
             column-gap: 20px;
             row-gap: 12px;
             align-items: baseline;
@@ -671,14 +673,16 @@
         .docs-links {
             display: flex;
             flex-direction: column;
+            flex: 1;
+            justify-content: space-between;
             gap: 10px;
         }
 
         .docs-link {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
+            gap: 10px;
+            padding: 8px 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
             background: var(--bg-elevated);
@@ -693,27 +697,22 @@
 
         .docs-link-icon {
             flex-shrink: 0;
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .docs-link-icon svg {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
         }
 
         .icon-docs {
             background: rgba(129, 140, 248, 0.15);
             color: #818cf8;
-        }
-
-        .icon-compiler {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
         }
 
         .icon-troubleshooting {
@@ -737,16 +736,10 @@
             color: var(--text);
         }
 
-        .docs-link-subtitle {
-            font-size: 11px;
-            color: var(--text-dim);
-            margin-top: 2px;
-        }
-
         .docs-link-arrow {
             flex-shrink: 0;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             color: var(--text-dim);
         }
     </style>
@@ -754,7 +747,7 @@
 <body>
 <header class="topbar">
     <span class="logo">H</span>
-    <span class="brand">Hyde Exception Handler</span>
+    <span class="brand">An error has occurred</span>
     <div class="topbar-actions">
         <div class="ai-button-group">
             <span class="ai-group-label">Ask AI</span>
@@ -871,7 +864,7 @@
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                     </svg>
-                    <div class="env-heading">Documentation</div>
+                    <div class="env-heading">Documentation &amp; Links</div>
                 </div>
                 <div class="docs-links" style="margin-top: 16px;">
                     <a class="docs-link" href="https://hydephp.com/docs/2.x/" target="_blank" rel="noopener">
@@ -883,21 +876,6 @@
                         </span>
                         <span class="docs-link-text">
                             <div class="docs-link-title">Documentation</div>
-                            <div class="docs-link-subtitle">Browse the full Hyde docs</div>
-                        </span>
-                        <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </a>
-                    <a class="docs-link" href="https://hydephp.com/docs/2.x/realtime-compiler" target="_blank" rel="noopener">
-                        <span class="docs-link-icon icon-compiler">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                            </svg>
-                        </span>
-                        <span class="docs-link-text">
-                            <div class="docs-link-title">Realtime Compiler</div>
-                            <div class="docs-link-subtitle">How the compiler works</div>
                         </span>
                         <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
@@ -912,7 +890,6 @@
                         </span>
                         <span class="docs-link-text">
                             <div class="docs-link-title">Troubleshooting Guide</div>
-                            <div class="docs-link-subtitle">Common issues and fixes</div>
                         </span>
                         <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
@@ -927,8 +904,7 @@
                             </svg>
                         </span>
                         <span class="docs-link-text">
-                            <div class="docs-link-title">Report an Issue</div>
-                            <div class="docs-link-subtitle">Found a bug? Let us know</div>
+                            <div class="docs-link-title">Report an Issue on GitHub</div>
                         </span>
                         <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>
@@ -973,27 +949,40 @@
                     </div>
                 </div>
                 <div class="env-grid">
-                    <span class="env-key">GET Data</span>
-                    <span class="env-value">{{ $environment['getData'] }}</span>
-                    <span class="env-key">POST Data</span>
-                    <span class="env-value">{{ $environment['postData'] }}</span>
+                    <span class="env-key">Request</span>
+                    <span class="env-value mono">{{ $environment['request'] }}</span>
+                    <span class="env-key">Time</span>
+                    <span class="env-value" id="envTime" data-time="{{ $environment['timeIso'] }}">{{ $environment['time'] }}</span>
 
-                    <span class="env-key">Files</span>
-                    <span class="env-value">{{ $environment['files'] }}</span>
-                    <span class="env-key">Cookies</span>
-                    <span class="env-value">{{ $environment['cookies'] }}</span>
-
-                    <span class="env-key full">Session ID</span>
-                    <span class="env-value full mono">{{ $environment['sessionId'] ?? 'None' }}</span>
-
-                    <span class="env-key full">Time</span>
-                    <span class="env-value full">{{ $environment['time'] }}</span>
+                    <span class="env-key">Framework</span>
+                    <span class="env-value">{{ $environment['frameworkVersion'] }}</span>
+                    <span class="env-key">Realtime Compiler</span>
+                    <span class="env-value">{{ $environment['rtcVersion'] }}</span>
                 </div>
             </section>
         </div>
     </main>
 </div>
 <script>
+    (function () {
+        var el = document.getElementById('envTime');
+
+        if (!el) {
+            return;
+        }
+
+        var date = new Date(el.getAttribute('data-time'));
+
+        if (isNaN(date.getTime())) {
+            return;
+        }
+
+        el.textContent = new Intl.DateTimeFormat(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+        }).format(date);
+    })();
+
     document.querySelectorAll('.frame').forEach(function (frame) {
         frame.addEventListener('click', function () {
             var index = frame.getAttribute('data-frame');
