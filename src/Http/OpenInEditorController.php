@@ -18,6 +18,9 @@ class OpenInEditorController extends BaseController
 {
     protected bool $withSession = true;
 
+    /** @var array<int, string> File extensions that may be opened, since HydePHP errors often trace back to content files rather than PHP source. */
+    protected const ALLOWED_EXTENSIONS = ['.php', '.md', '.markdown', '.yaml', '.yml', '.json', '.blade.php'];
+
     public static function enabled(): bool
     {
         return config('hyde.server.dashboard.interactive', true);
@@ -39,8 +42,8 @@ class OpenInEditorController extends BaseController
             $file = $this->request->data['file'] ?? $this->abort(400, 'Must provide a file path');
             $path = $this->resolvePath($file) ?? $this->abort(403, 'Refusing to open a file outside the project directory');
 
-            if (! str_ends_with(strtolower($path), '.php')) {
-                $this->abort(403, 'Refusing to open a non-PHP file');
+            if (! $this->hasAllowedExtension($path)) {
+                $this->abort(403, 'Refusing to open a file with a disallowed extension');
             }
 
             if (! is_file($path)) {
@@ -76,6 +79,19 @@ class OpenInEditorController extends BaseController
         }
 
         return $real;
+    }
+
+    protected function hasAllowedExtension(string $path): bool
+    {
+        $path = strtolower($path);
+
+        foreach (static::ALLOWED_EXTENSIONS as $extension) {
+            if (str_ends_with($path, $extension)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /** @return array<int, string> */
