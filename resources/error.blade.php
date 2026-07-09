@@ -105,6 +105,7 @@
         }
 
         .ai-provider-btn {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -123,6 +124,54 @@
         .ai-provider-btn svg {
             width: 14px;
             height: 14px;
+        }
+
+        .ai-provider-btn .ai-tooltip {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-4px);
+            padding: 4px 8px;
+            border-radius: 5px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.1s ease, transform 0.1s ease;
+            z-index: 10;
+        }
+
+        .ai-provider-btn .ai-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-bottom-color: var(--border);
+        }
+
+        .ai-provider-btn .ai-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(1px);
+            border: 4px solid transparent;
+            border-bottom-color: var(--bg-elevated);
+        }
+
+        .ai-provider-btn:hover .ai-tooltip,
+        .ai-provider-btn:focus-visible .ai-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
         }
 
         .ai-provider-btn.icon-chatgpt {
@@ -710,26 +759,29 @@
     <div class="topbar-actions">
         <div class="ai-button-group">
             <span class="ai-group-label">Ask AI</span>
-            <button type="button" class="ai-provider-btn icon-chatgpt ai-provider" data-provider="chatgpt" title="Ask ChatGPT about this error">
+            <button type="button" class="ai-provider-btn icon-chatgpt ai-provider" data-provider="chatgpt" aria-label="Ask ChatGPT about this error">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                     <circle cx="12" cy="7" r="4"></circle>
                     <circle cx="8" cy="15" r="4"></circle>
                     <circle cx="16" cy="15" r="4"></circle>
                 </svg>
+                <span class="ai-tooltip">ChatGPT</span>
             </button>
-            <button type="button" class="ai-provider-btn icon-claude ai-provider" data-provider="claude" title="Ask Claude about this error">
+            <button type="button" class="ai-provider-btn icon-claude ai-provider" data-provider="claude" aria-label="Ask Claude about this error">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                     <line x1="12" y1="2" x2="12" y2="22"></line>
                     <line x1="2" y1="12" x2="22" y2="12"></line>
                     <line x1="4.9" y1="4.9" x2="19.1" y2="19.1"></line>
                     <line x1="19.1" y1="4.9" x2="4.9" y2="19.1"></line>
                 </svg>
+                <span class="ai-tooltip">Claude</span>
             </button>
-            <button type="button" class="ai-provider-btn icon-perplexity ai-provider" data-provider="perplexity" title="Ask Perplexity about this error">
+            <button type="button" class="ai-provider-btn icon-perplexity ai-provider" data-provider="perplexity" aria-label="Ask Perplexity about this error">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
                     <polygon points="12,2 22,12 12,22 2,12"></polygon>
                     <polygon points="12,7 17,12 12,17 7,12"></polygon>
                 </svg>
+                <span class="ai-tooltip">Perplexity</span>
             </button>
         </div>
         <button type="button" class="copy-report" id="copyReportButton">
