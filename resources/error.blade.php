@@ -436,7 +436,8 @@
         }
 
         .env-card,
-        .ai-card {
+        .ai-card,
+        .docs-card {
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--bg-panel);
@@ -682,6 +683,89 @@
             font-size: 11px;
             color: var(--text-dim);
         }
+
+        /* Documentation panel */
+        .docs-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .docs-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-elevated);
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .docs-link:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-dim);
+        }
+
+        .docs-link-icon {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .docs-link-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .icon-docs {
+            background: rgba(129, 140, 248, 0.15);
+            color: #818cf8;
+        }
+
+        .icon-compiler {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+
+        .icon-troubleshooting {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        .icon-issue {
+            background: rgba(248, 113, 113, 0.15);
+            color: #f87171;
+        }
+
+        .docs-link-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .docs-link-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .docs-link-subtitle {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .docs-link-arrow {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            color: var(--text-dim);
+        }
     </style>
 </head>
 <body>
@@ -775,6 +859,77 @@
             @endforeach
         </section>
         <div class="info-panels">
+            <section class="docs-card">
+                <div class="panel-heading-row">
+                    <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <div class="env-heading">Documentation</div>
+                </div>
+                <div class="docs-links" style="margin-top: 16px;">
+                    <a class="docs-link" href="https://hydephp.com/docs/2.x/" target="_blank" rel="noopener">
+                        <span class="docs-link-icon icon-docs">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </span>
+                        <span class="docs-link-text">
+                            <div class="docs-link-title">Documentation</div>
+                            <div class="docs-link-subtitle">Browse the full Hyde docs</div>
+                        </span>
+                        <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <a class="docs-link" href="https://hydephp.com/docs/2.x/realtime-compiler" target="_blank" rel="noopener">
+                        <span class="docs-link-icon icon-compiler">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </span>
+                        <span class="docs-link-text">
+                            <div class="docs-link-title">Realtime Compiler</div>
+                            <div class="docs-link-subtitle">How the compiler works</div>
+                        </span>
+                        <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <a class="docs-link" href="https://hydephp.com/docs/2.x/troubleshooting" target="_blank" rel="noopener">
+                        <span class="docs-link-icon icon-troubleshooting">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </span>
+                        <span class="docs-link-text">
+                            <div class="docs-link-title">Troubleshooting Guide</div>
+                            <div class="docs-link-subtitle">Common issues and fixes</div>
+                        </span>
+                        <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    <a class="docs-link" href="https://github.com/hydephp/hyde/issues" target="_blank" rel="noopener">
+                        <span class="docs-link-icon icon-issue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </span>
+                        <span class="docs-link-text">
+                            <div class="docs-link-title">Report an Issue</div>
+                            <div class="docs-link-subtitle">Found a bug? Let us know</div>
+                        </span>
+                        <svg class="docs-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </section>
             <section class="ai-card">
                 <div class="panel-heading-row">
                     <svg class="panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
