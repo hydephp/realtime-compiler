@@ -79,6 +79,37 @@
             color: var(--text);
         }
 
+        .copy-report {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .copy-report:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .copy-report svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .copy-report.copied {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
         .layout {
             display: grid;
             grid-template-columns: minmax(280px, 340px) 1fr;
@@ -478,7 +509,15 @@
 <header class="topbar">
     <span class="logo">H</span>
     <span class="brand">Hyde Exception Handler</span>
+    <button type="button" class="copy-report" id="copyReportButton">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="8" y="2" width="8" height="4" rx="1"></rect>
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+        </svg>
+        <span id="copyReportButtonLabel">Copy Report</span>
+    </button>
 </header>
+<script id="reportData" type="application/json">{!! str_replace('</', '<\/', json_encode($report)) !!}</script>
 <div class="layout">
     <aside class="stack-trace">
         <div class="panel-heading">
@@ -618,6 +657,29 @@
             });
         });
     });
+
+    (function () {
+        var button = document.getElementById('copyReportButton');
+        var label = document.getElementById('copyReportButtonLabel');
+        var report = JSON.parse(document.getElementById('reportData').textContent);
+        var defaultLabel = label.textContent;
+
+        button.addEventListener('click', async function () {
+            try {
+                await navigator.clipboard.writeText(report);
+            } catch (error) {
+                window.prompt('Copy to clipboard: Ctrl+C, Enter', report);
+            }
+
+            button.classList.add('copied');
+            label.textContent = 'Copied!';
+
+            setTimeout(function () {
+                button.classList.remove('copied');
+                label.textContent = defaultLabel;
+            }, 2000);
+        });
+    })();
 </script>
 </body>
 </html>

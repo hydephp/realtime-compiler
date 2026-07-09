@@ -21,11 +21,15 @@ class ExceptionHandler
     {
         $statusCode = $exception->getCode() >= 400 ? $exception->getCode() : 500;
 
+        $frames = static::buildFrames($exception);
+        $environment = static::buildEnvironment();
+
         $html = Blade::render(file_get_contents(__DIR__.'/../../resources/error.blade.php'), [
             'exception' => $exception,
             'statusCode' => $statusCode,
-            'frames' => static::buildFrames($exception),
-            'environment' => static::buildEnvironment(),
+            'frames' => $frames,
+            'environment' => $environment,
+            'report' => static::buildReport($exception, $frames, $environment, $statusCode),
         ]);
 
         return Response::make($statusCode, 'Internal Server Error', [
@@ -78,6 +82,42 @@ class ExceptionHandler
             'sessionId' => $_COOKIE['PHPSESSID'] ?? (session_id() ?: null),
             'time' => date('M j, Y, g:i:s A', (int) ($_SERVER['REQUEST_TIME_FLOAT'] ?? time())),
         ];
+    }
+
+    /**
+     * Build a plain-text report of the exception, suitable for pasting into an AI assistant or issue tracker.
+     *
+     * @param  array<int, array{number: int, class: ?string, function: ?string, file: ?string, relativeFile: ?string, line: ?int, snippet: ?array}>  $frames
+     * @param  array{phpVersion: string, hydeVersion: string, os: string, getData: string, postData: string, files: string, cookies: string, sessionId: ?string, time: string}  $environment
+     */
+    protected static function buildReport(Throwable $exception, array $frames, array $environment, int $statusCode): string
+    {
+        $lines = [
+            sprintf('%s (%d)', $exception::class, $statusCode),
+            $exception->getMessage(),
+            '',
+            'Stack trace:',
+        ];
+
+        foreach ($frames as $frame) {
+            $location = $frame['relativeFile'] ?? $frame['file'] ?? '[internal function]';
+            $line = $frame['line'] !== null ? ':'.$frame['line'] : '';
+            $function = $frame['function'] !== null ? ' '.$frame['function'].'()' : '';
+
+            $lines[] = sprintf('#%d %s%s%s', $frame['number'], $location, $line, $function);
+        }
+
+        $lines[] = '';
+        $lines[] = 'Environment:';
+        $lines[] = sprintf('- PHP: %s', $environment['phpVersion']);
+        $lines[] = sprintf('- Hyde: %s', $environment['hydeVersion']);
+        $lines[] = sprintf('- Framework: %s', static::packageVersion('hyde/framework'));
+        $lines[] = sprintf('- Realtime Compiler: %s', static::packageVersion('hyde/realtime-compiler'));
+        $lines[] = sprintf('- OS: %s', $environment['os']);
+        $lines[] = sprintf('- Request: %s %s', $_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/');
+        $lines[] = sprintf('- Time: %s', $environment['time']);
+
+        return implode("\n", $lines);
     }
 
     protected static function packageVersion(string $package): string
