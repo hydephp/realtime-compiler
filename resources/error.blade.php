@@ -11,6 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ $csrfToken }}">
     <title>{{ class_basename($exception) }} - Hyde Exception Handler</title>
     <style>
         :root {
@@ -334,6 +335,42 @@
             flex-shrink: 0;
         }
 
+        .open-in-editor {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            flex-shrink: 0;
+            padding: 3px 9px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            background: var(--bg-panel);
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .open-in-editor:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .open-in-editor svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .open-in-editor.success {
+            color: var(--teal);
+            border-color: var(--teal);
+        }
+
+        .open-in-editor.failure {
+            color: var(--red);
+            border-color: var(--red);
+        }
+
         .code-body {
             overflow-x: auto;
         }
@@ -565,6 +602,16 @@
                                 <span class="lang-badge">PHP</span>
                                 <span class="code-filename">{{ $frame['relativeFile'] }}</span>
                                 <span class="code-line">Line {{ $frame['line'] }}</span>
+                                @if($openInEditorEnabled)
+                                    <button type="button" class="open-in-editor" data-file="{{ $frame['file'] }}">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 3h7v7"></path>
+                                            <path d="M10 14 21 3"></path>
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                        </svg>
+                                        <span class="open-in-editor-label">Open in Editor</span>
+                                    </button>
+                                @endif
                             </div>
                             <div class="code-body">
                                 <table class="code-table">
@@ -680,6 +727,46 @@
             }, 2000);
         });
     })();
+
+    document.querySelectorAll('.open-in-editor').forEach(function (button) {
+        var label = button.querySelector('.open-in-editor-label');
+        var defaultLabel = label.textContent;
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+        function reset() {
+            button.classList.remove('success', 'failure');
+            label.textContent = defaultLabel;
+        }
+
+        button.addEventListener('click', async function () {
+            try {
+                var response = await fetch('/_hyde/open-in-editor', {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json' },
+                    body: new URLSearchParams({
+                        file: button.getAttribute('data-file'),
+                        _token: csrfToken,
+                    }),
+                });
+
+                if (response.ok) {
+                    button.classList.add('success');
+                    label.textContent = 'Opened!';
+                } else {
+                    var payload = await response.json().catch(function () {
+                        return {};
+                    });
+                    button.classList.add('failure');
+                    label.textContent = payload.error || 'Failed';
+                }
+            } catch (error) {
+                button.classList.add('failure');
+                label.textContent = 'Failed';
+            }
+
+            setTimeout(reset, 2500);
+        });
+    });
 </script>
 </body>
 </html>

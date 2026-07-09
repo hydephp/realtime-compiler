@@ -30,6 +30,8 @@ class ExceptionHandler
             'frames' => $frames,
             'environment' => $environment,
             'report' => static::buildReport($exception, $frames, $environment, $statusCode),
+            'openInEditorEnabled' => OpenInEditorController::enabled(),
+            'csrfToken' => static::csrfToken(),
         ]);
 
         return Response::make($statusCode, 'Internal Server Error', [
@@ -118,6 +120,15 @@ class ExceptionHandler
         $lines[] = sprintf('- Time: %s', $environment['time']);
 
         return implode("\n", $lines);
+    }
+
+    protected static function csrfToken(): string
+    {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
+        return BaseController::generateCSRFToken();
     }
 
     protected static function packageVersion(string $package): string
